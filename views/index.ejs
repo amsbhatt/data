@@ -1,0 +1,38 @@
+
+<html>
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script type="text/javascript">
+    (function (){
+      DNA = {};
+      DNA.setting = {};
+      DNA.manifest = {
+        "ABC":{object:"button" , action:"click"}
+      };
+      DNA.initialize = function(){
+        console.log("init")
+        $.each($('[data-interaction]'), function(index , el){
+          console.log("loop through data-interactions", el)
+          var interaction = $(el).data()['interaction'];
+          var interactionType = DNA.manifest[interaction]["action"];
+          if(interactionType === "click"){
+            console.log("bind clicks" , interaction)
+            console.log("bind clicks" , el, DNA.manifest)
+            $(el).bind("click", function(){
+              DNA.createInteraction( DNA.manifest[interaction]);
+            })
+          }
+        })
+      };
+      DNA.createInteraction = function(data){
+        console.log("sending interaction", data)
+        $.ajax("http://localhost:3000/interactions", {type: 'POST', data: data});
+      }
+    })();
+  </script>
+</head>
+<body>
+Index Page
+<div data-interaction="ABC">Hello2</div>
+</body>
+</html>
