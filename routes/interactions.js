@@ -33,8 +33,6 @@ exports.create = function(req, res) {
     };
     var data = req.body;
     $.extend(data['data'], {session_id: req.sessionID});
-
-    console.info('data', data)
     var keys = Object.keys(data);
     var keyString = keys.join(",");
     var values = [];
