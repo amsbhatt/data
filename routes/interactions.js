@@ -1,6 +1,7 @@
 /* Interactions Route */
 
 var pg = require('pg')
+  , hstore = require('pg-hstore')
   , conString = "postgres://postgres@localhost/dna";
 
 var pgQuery = function(query, success, fail) {
@@ -29,12 +30,18 @@ exports.create = function(req, res) {
     var fail = function(result) {
       return console.error("a failure occurred", result);
     };
-    var data = req.body
+    var data = req.body;
     var keys = Object.keys(data);
     var keyString = keys.join(",");
     var values = [];
     keys.forEach(function(key) {
-      values.push("'" + data[key] + "'");
+      if (typeof data[key] === "object") {
+        hstore.stringify(data[key], function(result){
+          values.push("'" + result + "'");
+        })
+      } else {
+        values.push("'" + data[key] + "'");
+      }
     });
     var valueString = values.join(",");
     pgQuery("INSERT INTO interactions (" + keyString + ") VALUES (" + valueString + ");", success, fail)
