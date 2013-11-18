@@ -7,6 +7,7 @@
       DNA = {};
       DNA.setting = {};
       DNA.manifest = manifest;
+      DNA.url = window.location.href;
       DNA.initialize = function(){
         console.log("init")
         $.each($('[data-interaction]'), function(index , el){
@@ -22,8 +23,14 @@
           }
         })
       };
+      $(document).ready(function(){
+        DNA.createInteraction(DNA.manifest["PGV"]);
+      });
       DNA.createInteraction = function(data){
-        console.log("sending interaction", data)
+        var trackingRegex = DNA.url.match(/(t=|tracking_id=)([^&]*)/)
+        var trackingId = trackingRegex && trackingRegex[2];
+        $.extend(data['data'], {url: DNA.url, tracking_id: trackingId});
+        console.log("sending interaction", data);
         $.ajax("http://localhost:3000/interactions", {type: 'POST', data: data});
       }
     })();

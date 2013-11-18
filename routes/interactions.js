@@ -2,7 +2,8 @@
 
 var pg = require('pg')
   , hstore = require('pg-hstore')
-  , conString = "postgres://postgres@localhost/dna";
+  , conString = "postgres://postgres@localhost/dna"
+  , $ = require('jquery');
 
 var pgQuery = function(query, success, fail) {
   pg.connect(conString, function(err, client, done) {
@@ -31,6 +32,9 @@ exports.create = function(req, res) {
       return console.error("a failure occurred", result);
     };
     var data = req.body;
+    $.extend(data['data'], {session_id: req.sessionID});
+
+    console.info('data', data)
     var keys = Object.keys(data);
     var keyString = keys.join(",");
     var values = [];
