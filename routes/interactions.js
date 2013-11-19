@@ -32,7 +32,7 @@ exports.create = function(req, res) {
       return console.error("a failure occurred", result);
     };
     var data = req.body;
-    $.extend(data['data'], {session_id: req.sessionID});
+    $.extend(data, {session_id: req.sessionID});
     var keys = Object.keys(data);
     var keyString = keys.join(",");
     var values = [];
