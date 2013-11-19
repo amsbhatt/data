@@ -25,9 +25,10 @@
       };
       //Visit interactions
       $(document).ready(function(){
-        DNA.createInteraction(DNA.manifest["PGV"]);
+        DNA.createInteraction(DNA.manifest['PGV']);
       });
       DNA.createInteraction = function(data){
+        $.extend(data, {created_at: new Date().toISOString()});
         $.extend(data['data'], DNA.defaultData);
         $.ajax("http://localhost:3000/interactions", {type: 'POST', data: data});
       }
