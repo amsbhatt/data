@@ -19,10 +19,6 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('ipinfo', ipinfo);
-app.use(express.cookieParser());
-app.use(express.session({
-  secret: 'blahblah'
-}));
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin',      '*');
   res.header('Access-Control-Allow-Credentials', true);
@@ -30,6 +26,10 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers',     'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   next();
 });
+app.use(express.cookieParser());
+app.use(express.session({
+  secret: 'blahblah'
+}));
 express.favicon();
 app.use(express.logger('dev'));
 app.use(express.json());
