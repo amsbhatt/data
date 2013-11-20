@@ -20,7 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('ipinfo', ipinfo);
 app.use(function(req, res, next) {
-  console.info('req domain', req)
+  console.info('req domain', req.headers.origin)
   res.header('Access-Control-Allow-Origin',      '*');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods',     'GET,POST');
