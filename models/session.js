@@ -4,30 +4,38 @@ var pg = require('pg')
   , $ = require('jquery');
 
 exports.currentSession = {
-  create: function(req) {
+  create: function(req, callback) {
     var self = this;
     var ip_address = this.getClientIp(req);
 //    var ip_info = this.getIpInfo("4.17.99.0", function(result){ ----- stub for local testing
     this.getIpInfo(ip_address, function(result) {
-      self.query(result, req.sessionID);
+      self.query(result, req.sessionID, function(response) {
+        callback(response);
+      });
     });
   },
 
-  query: function(data, sessionId) {
+  query: function(data, sessionId, callback) {
     pg.connect(conString, function(err, client, done) {
       if (err) {
         return console.error('error connecting to database', err);
       }
       var dataHash = hstore.stringify(data);
-      client.query("SELECT count(*) from sessions where key='" + sessionId + "';", function(err, res) {
+      client.query("SELECT id from sessions where key='" + sessionId + "';", function(err, response) {
         if (err) {
-          return console.error('error querying count', err);
+          return console.error('error querying id', err);
         }
-        if (res && (res.rows[0].count != 1)) {
-          client.query("INSERT INTO sessions (key, data) VALUES ('" + sessionId + "','" + dataHash + "');", function(err, res) {
+        if (response && !!(response.rows[0] && response.rows[0].id)) {
+          callback(response.rows[0].id);
+        }
+        if (!(response && !!(response.rows[0] && response.rows[0].id))) {
+          client.query("INSERT INTO sessions (key, data) VALUES ('" + sessionId + "','" + dataHash + "') RETURNING id;", function(err, res) {
             done();
             if (err) {
               return console.error("error inserting session", err);
+            }
+            if (res && res.rows[0].id) {
+              callback(res.rows[0].id);
             }
           });
         }

@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -18,7 +17,7 @@ app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.set('ipinfo',ipinfo);
+app.set('ipinfo', ipinfo);
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
@@ -38,11 +37,15 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.post('/interactions', function(req, res){
-  sessionStorage.currentSession.create(req);
-  interaction.create(req, res);
+app.post('/interactions', function(req, res) {
+  sessionStorage.currentSession.create(req, function(response) {
+    console.info('response', response)
+    if (response) {
+      interaction.create(response, req, res);
+    }
+  });
 });
 
-http.createServer(app).listen(app.get('port'), function(){
+http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });

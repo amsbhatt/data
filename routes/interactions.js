@@ -23,7 +23,7 @@ var pgQuery = function(query, success, fail) {
   })
 };
 
-exports.create = function(req, res) {
+exports.create = function(sessionId, req, res) {
   if (req.method == 'POST') {
     var success = function(result) {
       res.send([result, req.query ]);
@@ -32,7 +32,7 @@ exports.create = function(req, res) {
       return console.error("a failure occurred", result);
     };
     var data = req.body;
-    $.extend(data, {session_id: req.sessionID});
+    $.extend(data, {session_id: sessionId});
     var keys = Object.keys(data);
     var keyString = keys.join(",");
     var values = [];
