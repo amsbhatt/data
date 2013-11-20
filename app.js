@@ -34,7 +34,11 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(ipinfo);
 app.use(express.cookieParser());
-app.use(express.session({secret: 'blahblah'}));
+app.use(express.session({
+  secret: 'blahblah',
+  maxAge  : new Date(Date.now() + 3600000), //1 Hour
+  expires : new Date(Date.now() + 3600000) //1 Hour
+}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -49,6 +53,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.post('/interactions', function(req, res) {
   sessionStorage.currentSession.create(req, function(response) {
+    console.info('session request', req)
     //listen to response for session_id before creating interactions
     if (response) {
       interaction.create(response, req, res);
