@@ -13,6 +13,7 @@ var ipinfo = new (require('node-ipinfodb'))('8a43349615008fef211172406e5ad59d90a
 
 app = express();
 
+
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
