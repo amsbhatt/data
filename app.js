@@ -26,7 +26,7 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers',     'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   next();
 });
-app.use(express.favicon());
+express.favicon();
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.bodyParser());
@@ -53,7 +53,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.post('/interactions', function(req, res) {
   sessionStorage.currentSession.create(req, function(response) {
-    console.info('session request', req)
+    console.info('session request', req.session)
     //listen to response for session_id before creating interactions
     if (response) {
       interaction.create(response, req, res);
