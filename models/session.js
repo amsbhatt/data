@@ -21,13 +21,16 @@ exports.currentSession = {
         return console.error('error connecting to database', err);
       }
       var dataHash = hstore.stringify(data);
+      // Check to see if the session already exists
       client.query("SELECT id from sessions where key='" + sessionId + "';", function(err, response) {
         if (err) {
           return console.error('error querying id', err);
         }
+        // if session exists, pull id from db and return to callback
         if (response && !!(response.rows[0] && response.rows[0].id)) {
           callback(response.rows[0].id);
         }
+        // if session does not exist, write to db, and return id to callback
         if (!(response && !!(response.rows[0] && response.rows[0].id))) {
           client.query("INSERT INTO sessions (key, data) VALUES ('" + sessionId + "','" + dataHash + "') RETURNING id;", function(err, res) {
             done();

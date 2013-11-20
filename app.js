@@ -39,7 +39,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.post('/interactions', function(req, res) {
   sessionStorage.currentSession.create(req, function(response) {
-    console.info('response', response)
+    //listen to response for session_id before creating interactions
     if (response) {
       interaction.create(response, req, res);
     }
