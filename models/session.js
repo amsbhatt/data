@@ -1,6 +1,6 @@
 var pg = require('pg')
   , hstore = require('pg-hstore')
-  , conString = "postgres://postgres@localhost/dna"
+  , conString = process.env.DATABASE_URL || "postgres://postgres@localhost/dna"
   , $ = require('jquery');
 
 exports.currentSession = {
