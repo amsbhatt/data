@@ -49,6 +49,7 @@ app.post('/interactions', function(req, res) {
     //listen to response for session_id before creating interactions
     if (response) {
       interaction.create(response, req, res);
+      res.send(200);
     }
   });
 });
