@@ -23,6 +23,16 @@ var pgQuery = function(query, success, fail) {
   })
 };
 
+//Specify valid action/category values
+var actionValidation = ['click', 'visit'];
+var categoryValidation = ['button', 'page'];
+
+var validParams = function(req) {
+  var validAction = (actionValidation.indexOf(req.body.action) > -1);
+  var validCategory = (categoryValidation.indexOf(req.body.category) > -1);
+  return !!(validAction && validCategory);
+};
+
 exports.create = function(sessionId, req, res) {
   if (req.method == 'POST') {
     var success = function(result) {
@@ -32,20 +42,27 @@ exports.create = function(sessionId, req, res) {
       return console.error("a failure occurred", result);
     };
     var data = req.body;
-    $.extend(data, {session_id: sessionId});
-    var keys = Object.keys(data);
-    var keyString = keys.join(",");
-    var values = [];
-    keys.forEach(function(key) {
-      if (typeof data[key] === "object") {
-        hstore.stringify(data[key], function(result){
-          values.push("'" + result + "'");
-        })
-      } else {
-        values.push("'" + data[key] + "'");
-      }
-    });
-    var valueString = values.join(",");
-    pgQuery("INSERT INTO interactions (" + keyString + ") VALUES (" + valueString + ");", success, fail)
+
+    if (validParams(req)) {
+      //Add session_id to interaction
+      $.extend(data, {session_id: sessionId});
+      var keys = Object.keys(data);
+      var keyString = keys.join(",");
+      var values = [];
+      keys.forEach(function(key) {
+        if (typeof data[key] === "object") {
+          hstore.stringify(data[key], function(result){
+            values.push("'" + result + "'");
+          })
+        } else {
+          values.push("'" + data[key] + "'");
+        }
+      });
+      var valueString = values.join(",");
+      //Insert interaction
+      pgQuery("INSERT INTO interactions (" + keyString + ") VALUES (" + valueString + ");", success, fail)
+    } else {
+      return console.error('action and/or category are not valid types - category: ' + data.category + ', action: ' + data.action);
+    }
   }
 };
