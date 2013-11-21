@@ -34,6 +34,7 @@ exports.currentSession = {
         }
         // if session exists, pull id from db and return to callback
         if (response && !!(response.rows[0] && response.rows[0].id)) {
+          done();
           callback(response.rows[0].id);
         }
         // if session does not exist, write to db, and return id to callback
