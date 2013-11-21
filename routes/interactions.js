@@ -7,6 +7,7 @@ var pg = require('pg')
 
 var pgQuery = function(query, success, fail) {
   pg.connect(conString, function(err, client, done) {
+    console.info('in connect db')
     if (err) {
       fail && fail(err);
       return console.error('could not connect to database', err)
@@ -15,8 +16,10 @@ var pgQuery = function(query, success, fail) {
       done();
       if (err) {
         fail && fail(err);
+        return console.error('could not connect to database', err)
       }
       if (result) {
+        console.info('success query', result)
         success && success(result);
       }
     });

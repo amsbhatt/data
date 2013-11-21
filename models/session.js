@@ -5,6 +5,7 @@ var pg = require('pg')
 
 exports.currentSession = {
   create: function(req, callback) {
+    console.info('in create')
     var self = this;
     var ip_address = this.getClientIp(req);
 //    var ip_info = this.getIpInfo("4.17.99.0", function(result){ ----- stub for local testing
@@ -16,6 +17,7 @@ exports.currentSession = {
   },
 
   query: function(data, sessionId, callback) {
+    console.info('in query');
     pg.connect(conString, function(err, client, done) {
       if (err) {
         return console.error('error connecting to database', err);

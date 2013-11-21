@@ -57,6 +57,7 @@ app.post('/interactions', function(req, res) {
     console.info('session request', req.session)
     //listen to response for session_id before creating interactions
     if (response) {
+      console.info('response exists', response)
       interaction.create(response, req, res);
       res.send(200);
     }
