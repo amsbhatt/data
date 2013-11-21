@@ -6,7 +6,7 @@ var pg = require('pg')
 exports.currentSession = {
   create: function(req, callback) {
     var self = this;
-    var ip_address = req.ip;
+    var ip_address = this.getClientIp(req);
     console.info('req ip', ip_address)
     //----- stub for local testing
 //    this.getIpInfo("4.17.99.0", function(result){
@@ -47,6 +47,24 @@ exports.currentSession = {
         }
       });
     });
+  },
+
+  getClientIp: function(req) {
+    var ipAddress;
+    // The request may be forwarded from local web server.
+    var forwardedIpsStr = req.header('x-forwarded-for');
+    if (forwardedIpsStr) {
+      // 'x-forwarded-for' header may return multiple IP addresses in
+      // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
+      // the first one
+      var forwardedIps = forwardedIpsStr.split(',');
+      ipAddress = forwardedIps[0];
+    }
+    if (!ipAddress) {
+      // If request was not forwarded
+      ipAddress = req.connection.remoteAddress;
+    }
+    return ipAddress
   },
 
   getIpInfo: function(ip_address, callback) {
