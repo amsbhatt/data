@@ -7,7 +7,6 @@ exports.currentSession = {
   create: function(req, callback) {
     var self = this;
     var ip_address = this.getClientIp(req);
-    console.info('req ip', ip_address)
     //----- stub for local testing
 //    this.getIpInfo("4.17.99.0", function(result){
     this.getIpInfo(ip_address, function(result) {
@@ -18,7 +17,6 @@ exports.currentSession = {
   },
 
   query: function(data, sessionId, callback) {
-    console.info('in query');
     pg.connect(conString, function(err, client, done) {
       if (err) {
         return console.error('error connecting to database', err);
@@ -70,7 +68,6 @@ exports.currentSession = {
   getIpInfo: function(ip_address, callback) {
     var ipInfoModule = app.get('ipinfo');
     ipInfoModule.getLocation(ip_address, function(err, results) {
-      console.info('results', results)
       if (results) {
         callback(results);
       }

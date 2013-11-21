@@ -1,0 +1,27 @@
+Model structure:
+
+dna=# \d sessions;
+                       Table "public.sessions"
+ Column |  Type   |                     Modifiers
+--------+---------+---------------------------------------------------
+ key    | text    |
+ data   | hstore  |
+ id     | integer | default nextval('sessions_id_sequence'::regclass)
+Indexes:
+    "sessions_id_key" UNIQUE CONSTRAINT, btree (id)
+
+dna=# \d interactions
+                                 Table "public.interactions"
+   Column   |            Type             |                    Modifiers
+------------+-----------------------------+--------------------------------------------------
+ object     | text                        |
+ action     | character(30)               |
+ category   | character(30)               |
+ data       | hstore                      |
+ created_at | timestamp without time zone |
+ session_id | integer                     |
+ id         | integer                     | default nextval('interactions_id_seq'::regclass)
+ user_id    | text                        |
+Indexes:
+    "interactions_id_key" UNIQUE CONSTRAINT, btree (id)
+    "session_idx" btree (session_id)
