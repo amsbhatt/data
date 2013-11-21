@@ -28,7 +28,7 @@
       DNA.createInteraction = function(data){
         $.extend(data, {created_at: new Date().toISOString()});
         $.extend(data['data'], DNA.defaultData);
-        $.ajax("http://localhost:3000/interactions", {
+        $.ajax("/interactions", {
           crossDomain: true,
           xhrFields: {
             withCredentials: true

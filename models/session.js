@@ -5,16 +5,11 @@ var pg = require('pg')
 
 exports.currentSession = {
   create: function(req, callback) {
-    console.info('in create')
     var self = this;
-    var ip_address = this.getClientIp(req);
-    console.info('ip_address', ip_address)
+    var ip_address = req.ip;
 //    var ip_info = this.getIpInfo("4.17.99.0", function(result){ ----- stub for local testing
     this.getIpInfo(ip_address, function(result) {
-      console.info('in getIpInfo result', result)
       self.query(result, req.sessionID, function(response) {
-        //THIS IS WHERE ITS BLOWING UP ISAAC
-        console.info('in query response', response)
         callback(response);
       });
     });
@@ -36,9 +31,8 @@ exports.currentSession = {
         if (response && !!(response.rows[0] && response.rows[0].id)) {
           done();
           callback(response.rows[0].id);
-        }
-        // if session does not exist, write to db, and return id to callback
-        if (!(response && !!(response.rows[0] && response.rows[0].id))) {
+          // if session does not exist, write to db, and return id to callback
+        } else {
           client.query("INSERT INTO sessions (key, data) VALUES ('" + sessionId + "','" + dataHash + "') RETURNING id;", function(err, res) {
             done();
             if (err) {
@@ -51,24 +45,6 @@ exports.currentSession = {
         }
       });
     });
-  },
-
-  getClientIp: function(req) {
-    var ipAddress;
-    // The request may be forwarded from local web server.
-    var forwardedIpsStr = req.header('x-forwarded-for');
-    if (forwardedIpsStr) {
-      // 'x-forwarded-for' header may return multiple IP addresses in
-      // the format: "client IP, proxy 1 IP, proxy 2 IP" so take the
-      // the first one
-      var forwardedIps = forwardedIpsStr.split(',');
-      ipAddress = forwardedIps[0];
-    }
-    if (!ipAddress) {
-      // If request was not forwarded
-      ipAddress = req.connection.remoteAddress;
-    }
-    return ipAddress
   },
 
   getIpInfo: function(ip_address, callback) {

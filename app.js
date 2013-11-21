@@ -13,7 +13,6 @@ var ipinfo = new (require('node-ipinfodb'))('8a43349615008fef211172406e5ad59d90a
 
 app = express();
 
-
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -22,10 +21,10 @@ app.set('ipinfo', ipinfo);
 app.use(function(req, res, next) {
   console.info('req header origin', req.headers.origin)
   if (req) {
-    res.header('Access-Control-Allow-Origin',      req.headers.origin);
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods',     'GET,POST,OPTIONS');
-    res.header('Access-Control-Allow-Headers',     'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   }
   next();
 });
@@ -43,8 +42,6 @@ app.use(ipinfo);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -53,12 +50,9 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.post('/interactions', function(req, res) {
-  console.info('req present', req.session)
   sessionStorage.currentSession.create(req, function(response) {
-    console.info('session request', req.session)
     //listen to response for session_id before creating interactions
     if (response) {
-      console.info('response exists', response)
       interaction.create(response, req, res);
       res.send(200);
     }
