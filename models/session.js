@@ -8,9 +8,12 @@ exports.currentSession = {
     console.info('in create')
     var self = this;
     var ip_address = this.getClientIp(req);
+    console.info('ip_address', ip_address)
 //    var ip_info = this.getIpInfo("4.17.99.0", function(result){ ----- stub for local testing
     this.getIpInfo(ip_address, function(result) {
+      console.info('in getIpInfo result', result)
       self.query(result, req.sessionID, function(response) {
+        console.info('in query response', response)
         callback(response);
       });
     });
