@@ -28,7 +28,7 @@ exports.currentSession = {
       }
       var dataHash = hstore.stringify(data);
       // Check to see if the session already exists
-      client.query("SELECT id from sessions where key=" + sessionId + ";", function(err, response) {
+      client.query("SELECT id from sessions where key='" + sessionId + "';", function(err, response) {
         if (err) {
           return console.error('error querying id', err);
         }
@@ -38,7 +38,7 @@ exports.currentSession = {
         }
         // if session does not exist, write to db, and return id to callback
         if (!(response && !!(response.rows[0] && response.rows[0].id))) {
-          client.query("INSERT INTO sessions (key, data) VALUES (" + sessionId + ",'" + dataHash + "') RETURNING id;", function(err, res) {
+          client.query("INSERT INTO sessions (key, data) VALUES ('" + sessionId + "','" + dataHash + "') RETURNING id;", function(err, res) {
             done();
             if (err) {
               return console.error("error inserting session", err);
