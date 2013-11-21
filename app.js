@@ -5,8 +5,8 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
-var interaction = require('./routes/interactions');
 var sessionStorage = require('./models/session');
+var interaction = require('./models/interaction');
 var http = require('http');
 var path = require('path');
 var ipinfo = new (require('node-ipinfodb'))('8a43349615008fef211172406e5ad59d90a07183cdf6e53524cbbe46d25cb350');
@@ -54,7 +54,6 @@ app.post('/interactions', function(req, res) {
     //listen to response for session_id before creating interactions
     if (response) {
       interaction.create(response, req, res);
-      res.send(200);
     }
   });
 });
