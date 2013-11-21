@@ -7,7 +7,9 @@ exports.currentSession = {
   create: function(req, callback) {
     var self = this;
     var ip_address = req.ip;
-//    var ip_info = this.getIpInfo("4.17.99.0", function(result){ ----- stub for local testing
+    console.info('req ip', ip_address)
+    //----- stub for local testing
+//    this.getIpInfo("4.17.99.0", function(result){
     this.getIpInfo(ip_address, function(result) {
       self.query(result, req.sessionID, function(response) {
         callback(response);
@@ -50,6 +52,7 @@ exports.currentSession = {
   getIpInfo: function(ip_address, callback) {
     var ipInfoModule = app.get('ipinfo');
     ipInfoModule.getLocation(ip_address, function(err, results) {
+      console.info('results', results)
       if (results) {
         callback(results);
       }
