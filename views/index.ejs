@@ -25,14 +25,13 @@
         DNA.initialize();
       });
       DNA.createInteraction = function(data){
-        $.extend(data, {created_at: new Date().toISOString(), user_id: DNA.registerUser});
         $.ajax("/interactions", {
           crossDomain: true,
           xhrFields: {
             withCredentials: true
           },
           type: 'POST',
-          data: data});
+          data: $.extend(data, {created_at: new Date().toISOString(), user_id: DNA.registerUser})});
       }
     })();
   </script>
