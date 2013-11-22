@@ -47,7 +47,7 @@ exports.currentSession = {
           callback(response.rows[0].id);
           // if session does not exist, write to db, and return id to callback
         } else {
-          client.query("INSERT INTO sessions (key, data) VALUES ('" + sessionId + "','" + dataHash + "') RETURNING id;", function(err, res) {
+          client.query("INSERT INTO sessions (key, created_at, data) VALUES ('" + sessionId + "','" + new Date().toISOString() + "','" + dataHash + "') RETURNING id;", function(err, res) {
             done();
             if (err) {
               return console.error("error inserting session", err);
