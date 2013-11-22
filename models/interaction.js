@@ -35,7 +35,6 @@ var validParams = function(req) {
 
 //Default data
 var defaultData = function(urlPath) {
-  console.info('url Path!!!!!!!!!!!!!!!!', urlPath)
   var trackingRegex = urlPath.match(/(t=|tracking_id=)([^&]*)/);
   var trackingId = trackingRegex && trackingRegex[2];
 
@@ -55,10 +54,8 @@ exports.create = function(sessionId, req, res) {
     };
 
     var data = req.body;
-    console.info('data before!!!!!!!!!!!!!!!', data)
     //Get default info about user's browser
     var defaults = defaultData(data.browserUrl);
-    console.info('defaults data!!!!!!!!!!!!!!', defaults)
     delete data.browserUrl;
 
     if (validParams(req)) {
