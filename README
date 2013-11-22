@@ -2,11 +2,12 @@ Model structure:
 
 dna=# \d sessions;
                        Table "public.sessions"
- Column |  Type   |                     Modifiers
---------+---------+---------------------------------------------------
- key    | text    |
- data   | hstore  |
- id     | integer | default nextval('sessions_id_sequence'::regclass)
+   Column   |            Type             |                     Modifiers
+------------+-----------------------------+---------------------------------------------------
+ key        | text                        |
+ data       | hstore                      |
+ id         | integer                     | default nextval('sessions_id_sequence'::regclass)
+ created_at | timestamp without time zone |
 Indexes:
     "sessions_id_key" UNIQUE CONSTRAINT, btree (id)
 
@@ -15,8 +16,8 @@ dna=# \d interactions
    Column   |            Type             |                    Modifiers
 ------------+-----------------------------+--------------------------------------------------
  object     | text                        |
- action     | character(30)               |
- category   | character(30)               |
+ action     | text                        |
+ category   | text                        |
  data       | hstore                      |
  created_at | timestamp without time zone |
  session_id | integer                     |
