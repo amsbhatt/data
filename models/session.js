@@ -24,6 +24,8 @@ exports.currentSession = {
         user_agent: ua,
         app_version: appVersion(ua)
       });
+      delete result.statusCode;
+      delete result.statusMessage;
       self.query(result, req.sessionID, function(response) {
         callback(response);
       });
