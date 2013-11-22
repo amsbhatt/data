@@ -1,7 +1,8 @@
-var pg = require('pg')
-  , hstore = require('pg-hstore')
-  , conString = process.env.HEROKU_POSTGRESQL_BROWN_URL || "postgres://postgres@localhost/dna"
-  , $ = require('jquery');
+DNAlibs = require('./index');
+var pg = DNAlibs.pg;
+var hstore = DNAlibs.hstore;
+var conString = DNAlibs.conString;
+var $ = DNAlibs.$;
 
 exports.currentSession = {
   create: function(req, callback) {
