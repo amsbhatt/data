@@ -33,6 +33,17 @@ var validParams = function(req) {
   return !!(validAction && validCategory);
 };
 
+//Default data
+var defaultData = function(urlPath) {
+  var trackingRegex = urlPath.match(/(t=|tracking_id=)([^&]*)/);
+  var trackingId = trackingRegex && trackingRegex[2];
+
+//Set default data here
+  return returnData = {
+    tracking_id: trackingId, url: urlPath
+  };
+};
+
 exports.create = function(sessionId, req, res) {
   if (req.method == 'POST') {
     var success = function(result) {
@@ -41,17 +52,21 @@ exports.create = function(sessionId, req, res) {
     var fail = function(result) {
       return console.error("a failure occurred", result);
     };
+
     var data = req.body;
+    //Get default info about user's browser
+    var defaults = defaultData(data.browserUrl);
+    delete data.browserUrl;
 
     if (validParams(req)) {
       //Add session_id to interaction
-      $.extend(data, {session_id: sessionId});
+      $.extend(data, {session_id: sessionId, data: defaults});
       var keys = Object.keys(data);
       var keyString = keys.join(",");
       var values = [];
       keys.forEach(function(key) {
         if (typeof data[key] === "object") {
-          hstore.stringify(data[key], function(result){
+          hstore.stringify(data[key], function(result) {
             values.push("'" + result + "'");
           })
         } else {

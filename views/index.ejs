@@ -6,7 +6,6 @@
     (function (){
       DNA = {};
       DNA.manifest = manifest;
-      DNA.defaultData = defaultData;
       DNA.registerUser = null; //stub for user_id
       //Initialize for 'Click' interactions capture
       DNA.initialize = function(){
@@ -26,7 +25,7 @@
         DNA.initialize();
       });
       DNA.createInteraction = function(data){
-        $.extend(data, {created_at: new Date().toISOString(), user_id: DNA.registerUser, data: DNA.defaultData});
+        $.extend(data, {created_at: new Date().toISOString(), user_id: DNA.registerUser, browserUrl: window.location.href});
         $.ajax("/interactions", {
           crossDomain: true,
           xhrFields: {

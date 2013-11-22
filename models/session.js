@@ -4,13 +4,26 @@ var hstore = DNAlibs.hstore;
 var conString = DNAlibs.conString;
 var $ = DNAlibs.$;
 
+var appVersion = function(userAgent) {
+  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+    return 'mobile';
+  } else {
+    return 'desktop';
+  }
+};
+
 exports.currentSession = {
   create: function(req, callback) {
     var self = this;
     var ip_address = this.getClientIp(req);
     //----- stub for local testing
 //    this.getIpInfo("4.17.99.0", function(result){
+    var ua = req.headers['user-agent'];
     this.getIpInfo(ip_address, function(result) {
+      $.extend(result, {
+        user_agent: ua,
+        app_version: appVersion(ua)
+      });
       self.query(result, req.sessionID, function(response) {
         callback(response);
       });
