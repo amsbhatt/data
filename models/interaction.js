@@ -55,8 +55,7 @@ exports.create = function(sessionId, req, res) {
 
     var data = req.body;
     //Get default info about user's browser
-    var defaults = defaultData(data.browserUrl);
-    delete data.browserUrl;
+    var defaults = defaultData(req.headers['referer']);
 
     if (validParams(req)) {
       //Add session_id to interaction
