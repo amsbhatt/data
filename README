@@ -1,4 +1,13 @@
 Model structure:
+dna=# \d users;
+                      Table "public.users"
+  Column   |  Type   |                 Modifiers
+-----------+---------+-------------------------------------------
+ client_id | text    |
+ id        | integer | default nextval('users_id_seq'::regclass)
+Indexes:
+    "users_id_key" UNIQUE CONSTRAINT, btree (id)
+
 
 dna=# \d sessions;
                        Table "public.sessions"
@@ -26,3 +35,4 @@ dna=# \d interactions
 Indexes:
     "interactions_id_key" UNIQUE CONSTRAINT, btree (id)
     "session_idx" btree (session_id)
+    "user_idx" btree (user_id)
