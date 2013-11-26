@@ -1,8 +1,8 @@
 DNAlibs = require('./index');
-var pg = DNAlibs.pg;
-var hstore = DNAlibs.hstore;
-var conString = DNAlibs.conString;
-var $ = DNAlibs.$;
+var pg = DNAlibs.pg
+  , hstore = DNAlibs.hstore
+  , conString = DNAlibs.conString
+  , $ = DNAlibs.$;
 
 var appVersion = function(userAgent) {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {

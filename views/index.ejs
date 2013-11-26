@@ -6,7 +6,12 @@
     (function (){
       DNA = {};
       DNA.manifest = manifest;
-      DNA.registerUser = null; //stub for user_id
+      //User id information if present
+      DNA.registerUser = {
+        uid: 1234,
+        fb_uid: null,
+        fb_at: null
+      };
       //Initialize for 'Click' interactions capture
       DNA.initialize = function(){
         $.each($('[data-interaction]'), function(index , el){
@@ -31,7 +36,7 @@
             withCredentials: true
           },
           type: 'POST',
-          data: $.extend(data, {created_at: new Date().toISOString(), user_id: DNA.registerUser})});
+          data: $.extend(data, {created_at: new Date().toISOString(), userInfo: DNA.registerUser})});
       }
     })();
   </script>
