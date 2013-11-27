@@ -19,7 +19,7 @@ exports.user = {
           done();
           callback(response.rows[0].id);
         } else {
-          client.query("INSERT into users (client_id) VALUES ('" + data.uid + "') RETURNING id;", function (err, res) {
+          client.query("INSERT into users (client_id, access_token, facebook_id) VALUES ('" + data.uid + "','" + data.uat + "'," + parseInt(data.fb_uid) + ") RETURNING id;", function (err, res) {
             done();
             if (err) {
               return console.error('error inserting user into database', err);
