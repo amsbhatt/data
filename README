@@ -1,27 +1,48 @@
 Model structure:
-dna=# \d users;
-                      Table "public.users"
-  Column   |  Type   |                 Modifiers
------------+---------+-------------------------------------------
- client_id | text    |
- id        | integer | default nextval('users_id_seq'::regclass)
+List of relations
+ Schema |        Name         |   Type   |  Owner
+--------+---------------------+----------+----------
+ public | education           | table    | postgres
+ public | education_id_seq    | sequence | postgres
+ public | interactions        | table    | postgres
+ public | interactions_id_seq | sequence | postgres
+ public | likes               | table    | postgres
+ public | likes_id_seq        | sequence | postgres
+ public | sessions            | table    | postgres
+ public | sessions_id_seq     | sequence | postgres
+ public | users               | table    | postgres
+ public | users_id_seq        | sequence | postgres
+ public | work                | table    | postgres
+ public | work_id_seq         | sequence | postgres
+(12 rows)
+
+Table "public.users"
+      Column       |     Type     |                 Modifiers
+-------------------+--------------+-------------------------------------------
+ client_id         | text         |
+ id                | integer      | default nextval('users_id_seq'::regclass)
+ source_id         | text         |
+ access_token      | text         |
+ current_location  | hstore       |
+ birthdate         | date         |
+ gender            | character(6) |
+ source            | text         |
+ hometown_location | hstore       |
 Indexes:
     "users_id_key" UNIQUE CONSTRAINT, btree (id)
 
 
-dna=# \d sessions;
-                       Table "public.sessions"
-   Column   |            Type             |                     Modifiers
-------------+-----------------------------+---------------------------------------------------
+Table "public.sessions"
+   Column   |            Type             |                  Modifiers
+------------+-----------------------------+----------------------------------------------
  key        | text                        |
  data       | hstore                      |
- id         | integer                     | default nextval('sessions_id_sequence'::regclass)
+ id         | integer                     | default nextval('sessions_id_seq'::regclass)
  created_at | timestamp without time zone |
 Indexes:
     "sessions_id_key" UNIQUE CONSTRAINT, btree (id)
 
-dna=# \d interactions
-                                 Table "public.interactions"
+Table "public.interactions"
    Column   |            Type             |                    Modifiers
 ------------+-----------------------------+--------------------------------------------------
  object     | text                        |
@@ -30,9 +51,48 @@ dna=# \d interactions
  data       | hstore                      |
  created_at | timestamp without time zone |
  session_id | integer                     |
- id         | integer                     | default nextval('interactions_id_seq'::regclass)
  user_id    | text                        |
+ id         | integer                     | default nextval('interactions_id_seq'::regclass)
 Indexes:
     "interactions_id_key" UNIQUE CONSTRAINT, btree (id)
+    "interactions_user_idx" btree (user_id)
     "session_idx" btree (session_id)
-    "user_idx" btree (user_id)
+
+Table "public.likes"
+  Column  |  Type   |                 Modifiers
+----------+---------+-------------------------------------------
+ page_id  | bigint  |
+ user_id  | integer |
+ category | text    |
+ id       | integer | default nextval('likes_id_seq'::regclass)
+Indexes:
+    "likes_id_key" UNIQUE CONSTRAINT, btree (id)
+    "likes_user_idx" btree (user_id)
+
+Table "public.education"
+   Column   |            Type             |                   Modifiers
+------------+-----------------------------+-----------------------------------------------
+ user_id    | integer                     |
+ type       | text                        |
+ page_id    | bigint                      |
+ year       | integer                     |
+ name       | text                        |
+ id         | integer                     | default nextval('education_id_seq'::regclass)
+ created_at | timestamp without time zone |
+Indexes:
+    "education_id_key" UNIQUE CONSTRAINT, btree (id)
+    "education_user_idx" btree (user_id)
+
+Table "public.work"
+   Column   |            Type             |                Modifiers
+------------+-----------------------------+------------------------------------------
+ user_id    | integer                     |
+ location   | text                        |
+ position   | text                        |
+ page_id    | bigint                      |
+ company    | text                        |
+ id         | integer                     | default nextval('work_id_seq'::regclass)
+ created_at | timestamp without time zone |
+Indexes:
+    "work_id_key" UNIQUE CONSTRAINT, btree (id)
+    "work_user_idx" btree (user_id)
