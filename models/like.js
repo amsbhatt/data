@@ -24,7 +24,7 @@ var pgQuery = function (query, success, fail) {
 };
 
 exports.create = function (data, user_id) {
-  request('https://graph.facebook.com/fql?q=select+page_id,type+from+page_fan+where+uid=' + data.fb_uid + '&access_token=' + data.uat, function (err, res, body) {
+  request('https://graph.facebook.com/fql?q=select+page_id,type+from+page_fan+where+uid=' + data.suid + '&access_token=' + data.uat, function (err, res, body) {
     var likes = JSON.parse(body);
     $.each(likes.data, function (rowNumber, likeData) {
       //Check to see if user_id and page_id already exist in likes table
