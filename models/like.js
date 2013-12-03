@@ -36,7 +36,7 @@ exports.create = function (data, user_id) {
           return true;
         } else {
           //Create a new entry since no matching records were found
-          pgQuery("INSERT into likes (category, page_id, user_id) VALUES ('" + likeData.type.toLowerCase().replace(' ', '_') + "'," + parseInt(likeData.page_id) + "," + parseInt(user_id) + ");", function (success, error) {
+          pgQuery("INSERT into likes (category, page_id, user_id, created_at) VALUES ('" + likeData.type.toLowerCase().replace(' ', '_') + "'," + parseInt(likeData.page_id) + "," + parseInt(user_id) + ",'" + new Date().toISOString() + "');", function (success, error) {
             if (error) {
               return console.error('issue parsing facebook like data', error);
             }
