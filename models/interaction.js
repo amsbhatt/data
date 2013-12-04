@@ -76,7 +76,8 @@ exports.create = function (sessionId, req, res) {
     var userData = req.body.userInfo;
     delete data.userInfo;
     //Add default url data
-    var defaults = defaultData(req.headers['referer']);
+    var defaults = $.extend(data.data, defaultData(req.headers['referer']));
+
     //Add session_id and defaults to interaction
     $.extend(data, {session_id: sessionId, data: defaults});
 
