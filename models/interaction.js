@@ -26,7 +26,7 @@ var pgQuery = function (query, success, fail) {
 
 //Specify valid action/category values
 var actionValidation = ['click', 'visit'];
-var categoryValidation = ['button', 'page', 'link', 'input', 'image'];
+var categoryValidation = ['button', 'page', 'link', 'input', 'image', 'text_field'];
 
 var validParams = function (req) {
   var validAction = (actionValidation.indexOf(req.body.action) > -1);
@@ -73,6 +73,7 @@ exports.create = function (sessionId, req, res) {
     };
 
     var data = req.body;
+    console.info('data', data)
     var userData = req.body.userInfo;
     delete data.userInfo;
     //Add default url data
