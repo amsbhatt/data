@@ -73,14 +73,16 @@ exports.create = function (sessionId, req, res) {
     };
 
     var data = req.body;
-    console.info('data', data)
     var userData = req.body.userInfo;
     delete data.userInfo;
+
     //Add default url data
-    var defaults = $.extend(data.data, defaultData(req.headers['referer']));
+    $.extend(data.data, defaultData(req.headers['referer']));
+    var defaults = $.extend(data.data, {target_id: data.target_id} );
 
     //Add session_id and defaults to interaction
-    $.extend(data, {session_id: sessionId, data: defaults});
+    $.extend(data, {session_id: sessionId, data: defaults });
+    delete data.target_id;
 
     if (userData.uid && validParams(req)) {
       newUser.user.create(userData, function (user_id) {
