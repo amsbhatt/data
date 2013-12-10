@@ -28,24 +28,30 @@ manifest = {
   "ISC": { category: "image", object: "screen", action: "click", data: {} }
 };
 
-////MILYONI SDK - ENGAGEMENTS & CHAT
-////Post to: http://m-dna.herokuapp.com/interactions
-//
-//blah = {
-//  'EOV': { category: "engagement", object: "[ENG TYPE]", action: "view", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
-//  'EOC': {category: "engagement", object: "[ENG TYPE]",  action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
-//  'EOS': {category: "engagement", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "WHICH SOCIAL NETWORK"}}
-//Engagement Share Click: {category: “engagement”, object: "share", action: “click”, data: {media_id: [MEDIA ID], engagement_id: [ENG ID]}}
-//Engagement Carousel: {category: “engagement”, object: "carousel", action: “click”, data: {media_id: [MEDIA ID], direction: "RIGHT or LEFT"}}
-//Engagement Opengraph: {category: “opengraph”, object: [ENG TYPE], action: “share”, data: {media_id: [MEDIA ID], engagement_id: [ENG ID], destination: "facebook"}}
-//
+//MILYONI SDK - ENGAGEMENTS & CHAT
+blah = {
+  'WEV': {category: "widget", object: "engagement", action: "view", data: {media_id: "[MEDIA ID]"}},
+  'EV': {category: "engagement", object: "[ENG TYPE]", action: "view", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+  'EC': {category: "engagement", object: "[ENG TYPE]",  action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+  'ES': {category: "engagement", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "WHICH SOCIAL NETWORK"}},
+  'ESC': {category: "engagement", object: "share", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+  'ECC': {category: "engagement", object: "carousel", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", direction: "RIGHT or LEFT"}},
+  'EOS': {category: "opengraph", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "facebook"}},
 //CHAT
-//Chat View: {category: “chat”, object: [live, annotated, comments], action: “view”, data: {media_id: [MEDIA ID], chat_id: [CHAT ID]}}, #GOOD FOR POLLING IF NO POLLING THEN DISREGARD
-//Chat Click: {category: “chat”, object: "input", action: “click”, data: {media_id: [MEDIA ID]}},
-//Chat Scroll: {category: “chat”, object: "live", action: “scroll”, data: {media_id: [MEDIA ID], direction: "RIGHT or LEFT"}},
-//Chat Opengraph: {category: “opengraph”, object: "chat", action: “share”, data: {media_id: [MEDIA ID], chat_id: [CHAT ID], destination: "facebook"}},
-//Chat Submit: {category: “chat”, object: "input", action: “submit”, data: {media_id: [MEDIA ID], chat_id: [CHAT ID]}},
-//Chat Share: {category: “chat”, object: "message", action: “share”, data: {media_id: [MEDIA ID], chat_id: [CHAT ID], destination: "WHICH SOCIAL NETWORK"}},
-//
-//
-//};
+  'WCV': {category: "widget", object: "chat", action: "view", data: {media_id: "[MEDIA ID]"}},
+  'TCC': {category: "text_field", object: "chat", action: "click", data: {media_id: "[MEDIA ID]"}},
+  'SCC': {category: "scroll", object: "chat", action: "click", data: {media_id: "[MEDIA ID]", direction: "UP or DOWN"}},
+  'OCS': {category: "opengraph", object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "facebook"}},
+  'TCS': {category: 'text_field', object: "chat", action: "submit", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]"}},
+  'MCS': {category: 'message', object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "WHICH SOCIAL NETWORK"}},
+//VIDEO
+  'OWS': {category: 'opengraph', object: 'watch', action: 'share', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
+  'PS': {category: 'player', object: 'started', action: 'click', data: {media_id: "[MEDIA_ID]"}},
+//LOGIN
+  'LOC': {category: 'login', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "WHAT PORTAL"}},
+  'LTOC': {category: 'logout', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
+//AVATAR
+  'WAV': {category: 'widget', object: 'avatar', action: 'view', data: {media_id: "[MEDIA_ID]"}},
+  'TAC': {category: 'button', object: 'activity_feed', action: 'click', data: {media_id: "[MEDIA_ID]", state: "ON or OFF"}},
+  'TSC': {category: 'button', object: 'auto_post', action: 'click', data: {media_id: "[MEDIA_ID]", state: "ON or OFF"}}
+};

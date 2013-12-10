@@ -57,6 +57,20 @@ app.post('/interactions', function(req, res) {
   });
 });
 
+//USING ENGINE.IO
+
+//var engine = require('engine.io')
+//  , http = require('http').createServer(app).listen(app.get('port'))
+//  , server = engine.attach(http);
+//
+//server.on('connection', function(socket) {
+//  console.info('socket exists!!!!', socket)
+//  socket.emit('im connected!!!!!')
+//  socket.on('close', function(response, req, res){
+//    interaction.create(response, req, res);
+//  });
+//});
+
 http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
