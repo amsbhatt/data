@@ -77,14 +77,13 @@ exports.create = function (sessionId, req, res) {
     delete data.userInfo;
 
     //Add default url data
-    var defaultValues = $.extend(defaultData(req.headers['referer']), {target_id: data.target_id})
+    var defaultValues = $.extend(defaultData(req.headers['referer']), {target_id: data.target_id, category_type: data.category_type});
     var defaults = $.extend(data.data, defaultValues);
 
     //Add session_id and defaults to interaction
     $.extend(data, {session_id: sessionId, data: defaults });
     delete data.target_id;
-
-    console.info('data', data)
+    delete data.category_type;
 
     if (userData.uid && validParams(req)) {
       newUser.user.create(userData, function (user_id) {

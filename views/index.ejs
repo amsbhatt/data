@@ -19,7 +19,11 @@
           var interactionType = DNA.manifest[interaction]["action"];
           if(interactionType === "click"){
             $(el).bind("click", function(){
-              DNA.createInteraction($.extend(DNA.manifest[interaction], {media_id: 123, target_id: 456}))
+              DNA.createInteraction($.extend(DNA.manifest[interaction], {
+              media_id: 123,
+              target_id: 456,
+              category_type: "Recently Added"
+              }))
             })
           }
         })

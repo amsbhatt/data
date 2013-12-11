@@ -33,6 +33,7 @@ blah = {
   'WEV': {category: "widget", object: "engagement", action: "view", data: {media_id: "[MEDIA ID]"}},
   'EV': {category: "engagement", object: "[ENG TYPE]", action: "view", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
   'EC': {category: "engagement", object: "[ENG TYPE]",  action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+  'EA': {category: "engagement", object: "POLL or TRIVIA",  action: "answer", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", engagement_answer_id: "[EA ID]"}},
   'ES': {category: "engagement", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "WHICH SOCIAL NETWORK"}},
   'ESC': {category: "engagement", object: "share", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
   'ECC': {category: "engagement", object: "carousel", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", direction: "RIGHT or LEFT"}},
@@ -46,7 +47,7 @@ blah = {
   'MCS': {category: 'message', object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "WHICH SOCIAL NETWORK"}},
 //VIDEO
   'OWS': {category: 'opengraph', object: 'watch', action: 'share', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
-  'PS': {category: 'player', object: 'started', action: 'click', data: {media_id: "[MEDIA_ID]"}},
+  'PS': {category: 'player', object: 'watch', action: 'click', data: {media_id: "[MEDIA_ID]"}},
 //LOGIN
   'LOC': {category: 'login', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "WHAT PORTAL"}},
   'LTOC': {category: 'logout', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
