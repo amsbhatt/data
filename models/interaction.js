@@ -39,7 +39,7 @@ var defaultData = function (urlPath) {
   var trackingRegex = urlPath.match(/(t=|tracking_id=)([^&]*)/);
   var trackingId = trackingRegex && trackingRegex[2];
 
-//Set default data here
+  //Set default data here
   return returnData = {
     tracking_id: trackingId, url: urlPath
   };
@@ -77,13 +77,10 @@ exports.create = function (sessionId, req, res) {
     delete data.userInfo;
 
     //Add default url data
-    var defaultValues = $.extend(defaultData(req.headers['referer']), {target_id: data.target_id, category_type: data.category_type});
-    var defaults = $.extend(data.data, defaultValues);
+    var defaults = $.extend(data.data, defaultData(req.headers['referer']));
 
     //Add session_id and defaults to interaction
     $.extend(data, {session_id: sessionId, data: defaults });
-    delete data.target_id;
-    delete data.category_type;
 
     if (userData.uid && validParams(req)) {
       newUser.user.create(userData, function (user_id) {

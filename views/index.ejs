@@ -15,15 +15,18 @@
       //Initialize for 'Click' interactions capture
       DNA.initialize = function(){
         $.each($('[data-interaction]'), function(index , el){
-          var interaction = $(el).data()['interaction'];
+
+         var dataValues = {}
+         $.each($(el).data(), function(key, value) {
+            dataValues[key] = value
+         })
+          var interaction = dataValues.interaction;
           var interactionType = DNA.manifest[interaction]["action"];
           if(interactionType === "click"){
             $(el).bind("click", function(){
               DNA.createInteraction($.extend(DNA.manifest[interaction], {
-              media_id: 123,
-              target_id: 456,
-              category_type: "Recently Added"
-              }))
+              media_id: 123
+              }), $.extend(DNA.manifest[interaction].data, dataValues))
             })
           }
         })
@@ -47,6 +50,6 @@
 </head>
 <body>
 Index Page
-<div data-interaction="BLC">Hello2</div>
+<div id='what' data-interaction="BLC" data-group="In Theaters" title="Delivery Man" data-target="264">Hello2</div>
 </body>
 </html>
