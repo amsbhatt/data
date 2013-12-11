@@ -72,9 +72,20 @@ exports.create = function (sessionId, req, res) {
       return console.error("a failure occurred", result);
     };
 
+//    dataValues[key.replace('dna', '').toLowerCase()] = value
+
     var data = req.body;
     var userData = req.body.userInfo;
     delete data.userInfo;
+
+    if (data && data.data) {
+      $.each(data.data, function(key, value){
+        if (!!key.match('dna')) {
+          data.data[key.replace('dna', '').toLowerCase()] = value;
+          delete data.data[key]
+        }
+      });
+    }
 
     //Add default url data
     var defaults = $.extend(data.data, defaultData(req.headers['referer']));
