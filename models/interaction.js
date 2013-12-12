@@ -93,7 +93,7 @@ exports.create = function (sessionId, req, res) {
     //Add session_id and defaults to interaction
     $.extend(data, {session_id: sessionId, data: defaults });
 
-    if (userData.uid && validParams(req)) {
+    if (userData && userData.uid && validParams(req)) {
       newUser.user.create(userData, function (user_id) {
         $.extend(data, {user_id: user_id});
         pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");", success, fail)
