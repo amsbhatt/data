@@ -26,7 +26,7 @@ var pgQuery = function (query, success, fail) {
 
 //Specify valid action/category values
 var actionValidation = ['click', 'visit'];
-var categoryValidation = ['widget', 'button', 'page', 'link', 'input', 'image', 'text_field', 'opengraph', 'scroll', 'message'];
+var categoryValidation = ['widget', 'button', 'page', 'link', 'input', 'image', 'text_field', 'opengraph', 'scroll', 'message', 'header'];
 
 var validParams = function (req) {
   var validAction = (actionValidation.indexOf(req.body.action) > -1);
