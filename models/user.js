@@ -56,16 +56,16 @@ exports.user = {
 
     var self = this;
     //user demographics
-    request('https://graph.facebook.com/fql?q=select+name,sex,birthday_date,hometown_location,current_location,friend_count,education,work+from+user+where+uid=' + data.suid + '&access_token=' + data.uat, function (err, res, body) {
+    request('https://graph.facebook.com/fql?q=select+name,sex,birthday,hometown_location,current_location,friend_count,education,work+from+user+where+uid=' + data.suid + '&access_token=' + data.uat, function (err, res, body) {
       if (!err && res.statusCode == 200) {
         var demographics = JSON.parse(body);
 
         $.each(demographics.data, function (rowNumber, dataHash) {
-          //If education is present, add to education table
+//          //If education is present, add to education table
           if (dataHash.education) {
             self.education(dataHash.education, user_id);
           }
-          //If work is present, add to work table
+//          //If work is present, add to work table
           if (dataHash.work) {
             self.work(dataHash.work, user_id);
           }
@@ -80,15 +80,15 @@ exports.user = {
   demographics: function (data, user_id) {
     var currentLocation = data.current_location ? hstore.stringify(data.current_location) : '';
     var hometownLocation = data.hometown_location ? hstore.stringify(data.hometown_location) : '';
-    var birthday = data.birthday_date ? new Date(data.birthday_date) : null;
-    var formattedBirthday = birthday ? birthday.getFullYear() + '-' + (birthday.getMonth() + 1) + '-' + birthday.getDate() : ''
+    var birthday = data.birthday ? new Date(data.birthday) : null;
+    var formattedBirthday = birthday ? birthday.getFullYear() + '-' + (birthday.getMonth() + 1) + '-' + birthday.getDate() : '';
 
     pgQuery("SELECT current_location ->'id' as id from users where id=" + user_id, function (err, res) {
       if (err) {
         return console.error("issue querying user and current location - user", err)
       }
       //if current_location page_id matches then don't update information
-      if ((res && !!(res.rows[0] && res.rows[0].id) &&  data.current_location && res.rows[0].id == data.current_location.id )) {
+      if ((res && !!(res.rows[0] && res.rows[0].id) && res.rows[0].id == data.current_location.id )) {
         return true;
       } else {
         pgQuery("UPDATE users SET hometown_location= hstore('" + hometownLocation + "'), " +
@@ -100,7 +100,7 @@ exports.user = {
           }
         });
         if (birthday) {
-          pgQuery("UPDATE users SET birthdate=(to_date('" + formattedBirthday + "', 'YYYY-MM-DD')), WHERE id=" + user_id + ";", function (err, res) {
+          pgQuery("UPDATE users SET birthdate=(to_date('" + formattedBirthday + "', 'YYYY-MM-DD')) WHERE id=" + user_id + ";", function (err, res) {
             if (err) {
               console.info('error with birthday', err)
             }
