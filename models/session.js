@@ -34,11 +34,15 @@ var getClientIp = function (req) {
 };
 
 var getIpInfo = function (ip_address, callback) {
-  ipinfo.getLocation(ip_address, function (err, results) {
-    if (results) {
-      callback(results);
-    }
-  });
+  if (ipinfo) {
+    ipinfo.getLocation(ip_address, function (err, results) {
+      if (results) {
+        callback(results);
+      }
+    });
+  } else {
+    callback({ipAddress: ip_address});
+  }
 };
 
 var query = function (data, sessionId, callback) {
