@@ -33,10 +33,6 @@ var interactionData = {method: 'POST', headers: {referer: 'http://localhost:3001
   userInfo: { uid: '', suid: '', uat: '' }}};
 
 describe('interaction data', function () {
-  it("works", function () {
-    expect(true).toBeTruthy();
-  });
-
   it('with no user', function (done) {
     interaction.create(123, interactionData);
     pgQuery("select * from interactions ORDER BY created_at DESC LIMIT 1;", function (err, res) {

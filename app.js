@@ -5,11 +5,10 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
-var sessionStorage = require('./models/session');
+var session = require('./models/session');
 var interaction = require('./models/interaction');
 var http = require('http');
 var path = require('path');
-var ipinfo = new (require('node-ipinfodb'))('8a43349615008fef211172406e5ad59d90a07183cdf6e53524cbbe46d25cb350');
 
 app = express();
 
@@ -17,7 +16,6 @@ app = express();
 app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.set('ipinfo', ipinfo);
 app.use(function(req, res, next) {
   if (req) {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -37,7 +35,6 @@ app.use(express.json());
 app.use(express.bodyParser());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(ipinfo);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -48,7 +45,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.post('/interactions', function(req, res) {
-  sessionStorage.currentSession.create(req, function(response) {
+  session.create(req, function(response) {
     //listen to response for session_id before creating interactions
     if (response) {
       interaction.create(response, req, res);
