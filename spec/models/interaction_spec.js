@@ -1,5 +1,5 @@
-var interaction = require('../models/interaction')
-  , DNAlibs = require('../models/index')
+var interaction = require('../../models/interaction')
+  , DNAlibs = require('../../models/index')
   , pg = DNAlibs.pg
   , hstore = DNAlibs.hstore
   , conString = DNAlibs.conString
