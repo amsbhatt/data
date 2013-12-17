@@ -18,7 +18,7 @@ var pgQuery = function (query, callback) {
 };
 
 //Specify valid action/category values
-var actionValidation = ['click', 'visit'];
+var actionValidation = ['click', 'visit', 'submit'];
 var categoryValidation = ['widget', 'button', 'page', 'link', 'input', 'image', 'text_field', 'opengraph', 'scroll', 'message', 'header'];
 
 var validParams = function (req) {
