@@ -5,21 +5,14 @@ var pg = DNAlibs.pg
   , $ = DNAlibs.$
   , newUser = require('./user');
 
-var pgQuery = function (query, success, fail) {
-  pg.connect(conString, function (err, client, done) {
+var pgQuery = function (query, callback) {
+  pg.connect(conString, function (err, client) {
     if (err) {
-      fail && fail(err);
-      return console.error('could not connect to database', err)
+      callback && callback(err);
     }
     client.query(query, function (err, result) {
-      done();
-      if (err) {
-        fail && fail(err);
-        return console.error('could not connect to database', err)
-      }
-      if (result) {
-        success && success(result);
-      }
+      callback && callback(err, result);
+      client.end();
     });
   })
 };
@@ -29,8 +22,8 @@ var actionValidation = ['click', 'visit'];
 var categoryValidation = ['widget', 'button', 'page', 'link', 'input', 'image', 'text_field', 'opengraph', 'scroll', 'message', 'header'];
 
 var validParams = function (req) {
-  var validAction = (actionValidation.indexOf(req.body.action) > -1);
-  var validCategory = (categoryValidation.indexOf(req.body.category) > -1);
+  var validAction = (actionValidation.indexOf(req.action) > -1);
+  var validCategory = (categoryValidation.indexOf(req.category) > -1);
   return !!(validAction && validCategory);
 };
 
@@ -63,43 +56,37 @@ var formattedQuery = function (data) {
   return {'keys': keyString, 'values': valueString};
 };
 
-exports.create = function (sessionId, req, res) {
+exports.create = function (sessionId, req) {
   if (req.method == 'POST') {
-    var success = function (result) {
-      res.send([result, req.query ]);
-    };
-    var fail = function (result) {
-      return console.error("a failure occurred", result);
-    };
-
-//    dataValues[key.replace('dna', '').toLowerCase()] = value
-
     var data = req.body;
-    var userData = req.body.userInfo;
-    delete data.userInfo;
 
-    if (data && data.data) {
-      $.each(data.data, function(key, value){
-        if (!!key.match('dna')) {
-          data.data[key.replace('dna', '').toLowerCase()] = value;
-          delete data.data[key]
-        }
-      });
-    }
+    if (validParams(data)) {
+      var userData = data.userInfo;
+      delete data.userInfo;
 
-    //Add default url data
-    var defaults = $.extend(data.data, defaultData(req.headers['referer']));
+      if (data && data.data) {
+        $.each(data.data, function (key, value) {
+          if (!!key.match('dna')) {
+            data.data[key.replace('dna', '').toLowerCase()] = value;
+            delete data.data[key]
+          }
+        });
+      }
 
-    //Add session_id and defaults to interaction
-    $.extend(data, {session_id: sessionId, data: defaults });
+      //Add default url data
+      var defaults = $.extend(data.data, defaultData(req.headers['referer']));
 
-    if (userData && userData.uid && validParams(req)) {
-      newUser.user.create(userData, function (user_id) {
-        $.extend(data, {user_id: user_id});
-        pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");", success, fail)
-      });
-    } else if (validParams(req)) {
-      pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");", success, fail)
+      //Add session_id and defaults to interaction
+      $.extend(data, {session_id: sessionId, data: defaults });
+
+      if (userData && userData.uid) {
+        newUser.user.create(userData, function (user_id) {
+          $.extend(data, {user_id: user_id});
+          pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");");
+        });
+      } else {
+        pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");");
+      }
     } else {
       return console.log('User information does not exist or action and/or category are not valid types - category: ' + data.category + ', action: ' + data.action);
     }

@@ -28,31 +28,31 @@ manifest = {
   "ISC": { category: "image", object: "screen", action: "click", data: {} }
 };
 
-//MILYONI SDK - ENGAGEMENTS & CHAT
-blah = {
-  'WEV': {category: "widget", object: "engagement", action: "view", data: {media_id: "[MEDIA ID]"}},
-  'EV': {category: "engagement", object: "[ENG TYPE]", action: "view", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
-  'EC': {category: "engagement", object: "[ENG TYPE]",  action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
-  'EA': {category: "engagement", object: "POLL or TRIVIA",  action: "answer", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", engagement_answer_id: "[EA ID]"}},
-  'ES': {category: "engagement", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "WHICH SOCIAL NETWORK"}},
-  'ESC': {category: "engagement", object: "share", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
-  'ECC': {category: "engagement", object: "carousel", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", direction: "RIGHT or LEFT"}},
-  'EOS': {category: "opengraph", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "facebook"}},
-//CHAT
-  'WCV': {category: "widget", object: "chat", action: "view", data: {media_id: "[MEDIA ID]"}},
-  'TCC': {category: "text_field", object: "chat", action: "click", data: {media_id: "[MEDIA ID]"}},
-  'SCC': {category: "scroll", object: "chat", action: "click", data: {media_id: "[MEDIA ID]", direction: "UP or DOWN"}},
-  'OCS': {category: "opengraph", object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "facebook"}},
-  'TCS': {category: 'text_field', object: "chat", action: "submit", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]"}},
-  'MCS': {category: 'message', object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "WHICH SOCIAL NETWORK"}},
-//VIDEO
-  'OWS': {category: 'opengraph', object: 'watch', action: 'share', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
-  'PS': {category: 'player', object: 'watch', action: 'click', data: {media_id: "[MEDIA_ID]"}},
-//LOGIN
-  'LOC': {category: 'login', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "WHAT PORTAL"}},
-  'LTOC': {category: 'logout', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
-//AVATAR
-  'WAV': {category: 'widget', object: 'avatar', action: 'view', data: {media_id: "[MEDIA_ID]"}},
-  'TAC': {category: 'button', object: 'activity_feed', action: 'click', data: {media_id: "[MEDIA_ID]", state: "ON or OFF"}},
-  'TSC': {category: 'button', object: 'auto_post', action: 'click', data: {media_id: "[MEDIA_ID]", state: "ON or OFF"}}
-};
+////MILYONI SDK - ENGAGEMENTS & CHAT
+//blah = {
+//  'WEV': {category: "widget", object: "engagement", action: "view", data: {media_id: "[MEDIA ID]"}},
+//  'EV': {category: "impression", object: "engagement", action: "view", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+//  'EC': {category: "engagement", object: "[ENG TYPE]",  action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+//  'EA': {category: "engagement", object: "POLL or TRIVIA",  action: "answer", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", engagement_answer_id: "[EA ID]"}},
+//  'ES': {category: "engagement", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "WHICH SOCIAL NETWORK"}},
+//  'ESC': {category: "engagement", object: "share", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]"}},
+//  'ECC': {category: "engagement", object: "carousel", action: "click", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", direction: "RIGHT or LEFT"}},
+//  'EOS': {category: "opengraph", object: "[ENG TYPE]", action: "share", data: {media_id: "[MEDIA ID]", engagement_id: "[ENG ID]", destination: "facebook"}},
+////CHAT
+//  'WCV': {category: "widget", object: "chat", action: "view", data: {media_id: "[MEDIA ID]"}},
+//  'TCC': {category: "text_field", object: "chat", action: "click", data: {media_id: "[MEDIA ID]"}},
+//  'SCC': {category: "scroll", object: "chat", action: "click", data: {media_id: "[MEDIA ID]", direction: "UP or DOWN"}},
+//  'OCS': {category: "opengraph", object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "facebook"}},
+//  'TCS': {category: 'text_field', object: "chat", action: "submit", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]"}},
+//  'MCS': {category: 'message', object: "chat", action: "share", data: {media_id: "[MEDIA ID]", chat_id: "[CHAT ID]", destination: "WHICH SOCIAL NETWORK"}},
+////VIDEO
+//  'OWS': {category: 'opengraph', object: 'watch', action: 'share', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
+//  'PS': {category: 'player', object: 'watch', action: 'click', data: {media_id: "[MEDIA_ID]"}},
+////LOGIN
+//  'LOC': {category: 'login', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "WHAT PORTAL"}},
+//  'LTOC': {category: 'logout', object: 'oauth', action: 'click', data: {media_id: "[MEDIA_ID]", destination: "facebook"}},
+////AVATAR
+//  'WAV': {category: 'widget', object: 'avatar', action: 'view', data: {media_id: "[MEDIA_ID]"}},
+//  'TAC': {category: 'button', object: 'activity_feed', action: 'click', data: {media_id: "[MEDIA_ID]", state: "ON or OFF"}},
+//  'TSC': {category: 'button', object: 'auto_post', action: 'click', data: {media_id: "[MEDIA_ID]", state: "ON or OFF"}}
+//};

@@ -57,6 +57,7 @@ exports.currentSession = {
             if (res && res.rows[0].id) {
               callback(res.rows[0].id);
             }
+            client.end();
           });
         }
       });

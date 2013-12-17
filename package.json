@@ -13,6 +13,7 @@
     "jquery": "1.8.3",
     "node-ipinfodb": "0.0.4",
     "request":"2.27.0",
-    "engine.io":"0.7.12"
+    "engine.io":"0.7.12",
+    "jasmine-node":"1.11.0"
   }
 }
