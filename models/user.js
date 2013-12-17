@@ -7,21 +7,14 @@ var pg = DNAlibs.pg
   , Like = require('./like');
 
 
-var pgQuery = function (query, success, fail) {
-  pg.connect(conString, function (err, client, done) {
+var pgQuery = function (query, callback) {
+  pg.connect(conString, function (err, client) {
     if (err) {
-      fail && fail(err);
-      return console.error('could not connect to database', err)
+      callback && callback(err);
     }
     client.query(query, function (err, result) {
-      done();
-      if (err) {
-        fail && fail(err);
-        return console.error('could not connect to database', err)
-      }
-      if (result) {
-        success && success(result);
-      }
+      callback && callback(err, result);
+      client.end();
     });
   });
 };
@@ -33,20 +26,20 @@ exports.user = {
     };
     var self = this;
     if (data.uid) {
-      pgQuery("SELECT id from users where client_id='" + data.uid + "';", function (success, fail) {
-        if (fail) {
+      pgQuery("SELECT id from users where client_id='" + data.uid + "';", function (err, res) {
+        if (err) {
           return failure
         }
-        if (success && !!(success.rows[0] && success.rows[0].id)) {
-          self.facebook_data(data, success.rows[0].id);
-          callback(success.rows[0].id);
+        if (res && !!(res.rows[0] && res.rows[0].id)) {
+          self.facebook_data(data, res.rows[0].id);
+          callback(res.rows[0].id);
         } else {
-          pgQuery("INSERT into users (client_id, access_token, source_id) VALUES ('" + data.uid + "','" + data.uat + "','" + data.suid + "') RETURNING id;", function (successInsert, failInsert) {
-            if (failInsert) {
+          pgQuery("INSERT into users (client_id, access_token, source_id) VALUES ('" + data.uid + "','" + data.uat + "','" + data.suid + "') RETURNING id;", function (err, res) {
+            if (err) {
               return failure
             }
-            var userId = successInsert.rows[0].id;
-            if (successInsert && userId) {
+            var userId = res.rows[0].id;
+            if (res && userId) {
               if (data.uat && data.suid) {
                 self.facebook_data(data, userId);
               }
@@ -64,44 +57,55 @@ exports.user = {
     var self = this;
     //user demographics
     request('https://graph.facebook.com/fql?q=select+name,sex,birthday_date,hometown_location,current_location,friend_count,education,work+from+user+where+uid=' + data.suid + '&access_token=' + data.uat, function (err, res, body) {
-      var demographics = JSON.parse(body);
+      if (!err && res.statusCode == 200) {
+        var demographics = JSON.parse(body);
 
-      $.each(demographics.data, function (rowNumber, dataHash) {
+        $.each(demographics.data, function (rowNumber, dataHash) {
+          //If education is present, add to education table
+          if (dataHash.education) {
+            self.education(dataHash.education, user_id);
+          }
+          //If work is present, add to work table
+          if (dataHash.work) {
+            self.work(dataHash.work, user_id);
+          }
+        });
 
-        //If education is present, add to education table
-        if (dataHash.education) {
-          self.education(dataHash.education, user_id);
-        }
-        //If work is present, add to work table
-        if (dataHash.work) {
-          self.work(dataHash.work, user_id);
-        }
-      });
-
-      //Update user row with demographics data
-      self.demographics(demographics.data[0], user_id);
+        //Update user row with demographics data
+        self.demographics(demographics.data[0], user_id);
+      }
     });
   },
 
   demographics: function (data, user_id) {
-    var currentLocation = hstore.stringify(data.current_location);
-    var hometownLocation = hstore.stringify(data.hometown_location);
-    var birthday = new Date(data.birthday_date);
-    var formattedBirthday = birthday.getFullYear() + '-' + (birthday.getMonth() + 1) + '-' + birthday.getDate();
+    var currentLocation = data.current_location ? hstore.stringify(data.current_location) : '';
+    var hometownLocation = data.hometown_location ? hstore.stringify(data.hometown_location) : '';
+    var birthday = data.birthday_date ? new Date(data.birthday_date) : null;
+    var formattedBirthday = birthday ? birthday.getFullYear() + '-' + (birthday.getMonth() + 1) + '-' + birthday.getDate() : ''
 
-    pgQuery("SELECT current_location ->'id' as id from users where id=" + user_id, function (res, err) {
+    pgQuery("SELECT current_location ->'id' as id from users where id=" + user_id, function (err, res) {
       if (err) {
         return console.error("issue querying user and current location - user", err)
       }
       //if current_location page_id matches then don't update information
-      if ((res && !!(res.rows[0] && res.rows[0].id) && res.rows[0].id == data.current_location.id )) {
+      if ((res && !!(res.rows[0] && res.rows[0].id) &&  data.current_location && res.rows[0].id == data.current_location.id )) {
         return true;
       } else {
         pgQuery("UPDATE users SET hometown_location= hstore('" + hometownLocation + "'), " +
           "current_location= hstore('" + currentLocation + "'), " +
-          "birthdate=(to_date('" + formattedBirthday + "', 'YYYY-MM-DD')), " +
           "gender='" + data.sex + "', source='facebook' " +
-          "WHERE id=" + user_id + ";");
+          "WHERE id=" + user_id + ";", function (err, res) {
+          if (err) {
+            console.info('error with demographics', err)
+          }
+        });
+        if (birthday) {
+          pgQuery("UPDATE users SET birthdate=(to_date('" + formattedBirthday + "', 'YYYY-MM-DD')), WHERE id=" + user_id + ";", function (err, res) {
+            if (err) {
+              console.info('error with birthday', err)
+            }
+          });
+        }
       }
     });
   },
@@ -118,7 +122,7 @@ exports.user = {
     });
 
     $.each(education, function (id, value) {
-      pgQuery("SELECT id from education where user_id=" + user_id + " AND page_id=" + value.page_id + ";", function (res, err) {
+      pgQuery("SELECT id from education where user_id=" + user_id + " AND page_id=" + value.page_id + ";", function (err, res) {
         if (err) {
           return console.error("issue querying user and page_id - education", err)
         }
@@ -146,7 +150,7 @@ exports.user = {
     });
 
     $.each(work, function (id, value) {
-      pgQuery("SELECT id from work where user_id=" + user_id + " AND page_id=" + value.page_id + ";", function (res, err) {
+      pgQuery("SELECT id from work where user_id=" + user_id + " AND page_id=" + value.page_id + ";", function (err, res) {
         if (err) {
           return console.error("issue querying user and page_id - work", err)
         }
