@@ -51,6 +51,7 @@ app.post('/interactions', function(req, res) {
       interaction.create(response, req, res);
     }
   });
+  res.end();
 });
 
 //USING ENGINE.IO
