@@ -62,7 +62,7 @@ var query = function (data, sessionId, callback) {
       client.end();
     });
   });
-}
+};
 
 
 exports.create = function (req, callback) {
@@ -70,22 +70,24 @@ exports.create = function (req, callback) {
   //----- stub for local testing
   var ua = req.headers['user-agent'];
   var geo = geoip.lookup(ip_address);
-  $.extend(geo, {
-    low_range: geo.range[0],
-    high_range: geo.range[1],
-    latitude: geo.ll[0],
-    longitude: geo.ll[1]
-  });
-  delete geo.range;
-  delete geo.ll;
-
   var result = {
     ip: ip_address,
     user_agent: ua,
     app_version: appVersion(ua)
   };
 
-  $.extend(result, geo);
+  if (geo) {
+    $.extend(geo, {
+      low_range: geo.range[0],
+      high_range: geo.range[1],
+      latitude: geo.ll[0],
+      longitude: geo.ll[1]
+    });
+    delete geo.range;
+    delete geo.ll;
+
+    $.extend(result, geo);
+  }
 
   query(result, req.sessionID, function (response) {
     callback(response);
