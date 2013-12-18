@@ -3,7 +3,7 @@ var pg = DNAlibs.pg
   , hstore = DNAlibs.hstore
   , conString = DNAlibs.conString
   , $ = DNAlibs.$
-  , ipinfo = new (require('node-ipinfodb'))('8a43349615008fef211172406e5ad59d90a07183cdf6e53524cbbe46d25cb350');
+  , geoip = require('geoip-lite');
 
 var appVersion = function (userAgent) {
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
@@ -31,18 +31,6 @@ var getClientIp = function (req) {
     ipAddress = req.connection.remoteAddress;
   }
   return ipAddress
-};
-
-var getIpInfo = function (ip_address, callback) {
-  if (ipinfo) {
-    ipinfo.getLocation(ip_address, function (err, results) {
-      if (results) {
-        callback(results);
-      }
-    });
-  } else {
-    callback({ipAddress: ip_address});
-  }
 };
 
 var query = function (data, sessionId, callback) {
@@ -80,17 +68,26 @@ var query = function (data, sessionId, callback) {
 exports.create = function (req, callback) {
   var ip_address = getClientIp(req);
   //----- stub for local testing
-//    this.getIpInfo("4.17.99.0", function(result){
   var ua = req.headers['user-agent'];
-  getIpInfo(ip_address, function (result) {
-    $.extend(result, {
-      user_agent: ua,
-      app_version: appVersion(ua)
-    });
-    delete result.statusCode;
-    delete result.statusMessage;
-    query(result, req.sessionID, function (response) {
-      callback(response);
-    });
+  var geo = geoip.lookup(ip_address);
+  $.extend(geo, {
+    low_range: geo.range[0],
+    high_range: geo.range[1],
+    latitude: geo.ll[0],
+    longitude: geo.ll[1]
+  });
+  delete geo.range;
+  delete geo.ll;
+
+  var result = {
+    ip: ip_address,
+    user_agent: ua,
+    app_version: appVersion(ua)
+  };
+
+  $.extend(result, geo);
+
+  query(result, req.sessionID, function (response) {
+    callback(response);
   });
 };
