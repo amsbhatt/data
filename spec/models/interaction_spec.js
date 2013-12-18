@@ -1,24 +1,6 @@
 var interaction = require('../../models/interaction')
-  , DNAlibs = require('../../models/index')
-  , pg = DNAlibs.pg
-  , hstore = DNAlibs.hstore
-  , conString = DNAlibs.conString
-  , $ = require('jquery');
-
-var pgQuery = function (query, callback) {
-  pg.connect(conString, function (err, client) {
-    if (err || !client) {
-      callback && callback(err || "No client found");
-    } else {
-      client.query(query, function (err, result) {
-        callback && callback(err, result);
-        client.end();
-      });
-    }
-  })
-};
-
-var deleteInt = pgQuery("delete from interactions;");
+  , $ = require('jquery')
+  , index = require('../models/index_spec.js');
 
 var interactionData = {method: 'POST', headers: {referer: 'http://localhost:3001/'}, body: {
   category: 'button',
@@ -35,7 +17,7 @@ var interactionData = {method: 'POST', headers: {referer: 'http://localhost:3001
 describe('interaction data', function () {
   it('with no user', function (done) {
     interaction.create(123, interactionData);
-    pgQuery("select * from interactions ORDER BY created_at DESC LIMIT 1;", function (err, res) {
+    index.pgQuery("select * from interactions ORDER BY created_at DESC LIMIT 1;", function (err, res) {
       var response = res.rows[0];
       expect(response).toBeTruthy();
       expect(err).toBeFalsy();
@@ -47,13 +29,13 @@ describe('interaction data', function () {
       expect(response.userInfo).toEqual();
       expect(response.user_id).toBeNull();
       expect(response.session_id).toBeTruthy();
-      expect(hstore.parse(response.data)).toEqual({
-        tracking_id: 'UL',
-        interaction: 'BLC',
-        direction: 'left',
-        target: '264',
+      expect(index.parse(response.data)).toEqual({
+        url: 'http://localhost:3001/',
         group: 'In Theaters',
-        url: 'http://localhost:3001/'
+        target: '264',
+        direction: 'left',
+        interaction: 'BLC',
+        tracking_id: null
       });
       done();
     });
@@ -62,7 +44,7 @@ describe('interaction data', function () {
   describe('with no user', function () {
     it('invalid category', function (done) {
       interaction.create(456, $.extend(interactionData.body, { category: 'yourFace'}));
-      pgQuery("select category from interactions where category='yourFace';", function (err, res) {
+      index.pgQuery("select category from interactions where category='yourFace';", function (err, res) {
         expect(res.rows[0]).toBeFalsy();
         expect(err).toBeFalsy();
         done();
@@ -71,7 +53,7 @@ describe('interaction data', function () {
 
     it('invalid action', function (done) {
       interaction.create(678, $.extend(interactionData.body, { action: 'goober'}));
-      pgQuery("select action from interactions where action='goober';", function (err, res) {
+      index.pgQuery("select action from interactions where action='goober';", function (err, res) {
         expect(res.rows[0]).toBeFalsy();
         expect(err).toBeFalsy();
         done();

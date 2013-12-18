@@ -71,7 +71,7 @@ exports.create = function (req, callback) {
   var ua = req.headers['user-agent'];
   var geo = geoip.lookup(ip_address);
   var result = {
-    ip: ip_address,
+    ip_address: ip_address,
     user_agent: ua,
     app_version: appVersion(ua)
   };
