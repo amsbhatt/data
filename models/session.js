@@ -1,8 +1,6 @@
-DNAlibs = require('./index');
-var pg = DNAlibs.pg
-  , hstore = DNAlibs.hstore
-  , conString = DNAlibs.conString
-  , $ = DNAlibs.$
+var lib = require('../lib/index')
+  , $ = require('jquery')
+  , hstore = require('pg-hstore')
   , geoip = require('geoip-lite');
 
 var appVersion = function (userAgent) {
@@ -33,38 +31,6 @@ var getClientIp = function (req) {
   return ipAddress
 };
 
-var query = function (data, sessionId, callback) {
-  pg.connect(conString, function (err, client) {
-    if (err) {
-      callback && callback(err)
-    }
-    var dataHash = hstore.stringify(data);
-    // Check to see if the session already exists
-    client.query("SELECT id from sessions where key='" + sessionId + "';", function (err, response) {
-      if (err) {
-        callback && callback(err);
-      }
-      // if session exists, pull id from db and return to callback
-      if (response && !!(response.rows[0] && response.rows[0].id)) {
-        callback(response.rows[0].id);
-        // if session does not exist, write to db, and return id to callback
-      } else {
-        client.query("INSERT INTO sessions (key, created_at, data) VALUES ('" + sessionId + "','" + new Date().toISOString() + "','" + dataHash + "') RETURNING id;", function (err, res) {
-          if (err) {
-            callback && callback(err);
-          }
-          if (res && res.rows[0].id) {
-            callback(res.rows[0].id);
-          }
-          client.end();
-        });
-      }
-      client.end();
-    });
-  });
-};
-
-
 exports.create = function (req, callback) {
   var ip_address = getClientIp(req);
   //----- stub for local testing
@@ -89,7 +55,21 @@ exports.create = function (req, callback) {
     $.extend(result, geo);
   }
 
-  query(result, req.sessionID, function (response) {
-    callback(response);
+  lib.pgQuery("SELECT id from sessions where key='" + req.sessionId + "';", function (err, res) {
+    if (err) {
+      console.error("error occured", err)
+    }
+    if (res && !!(res.rows[0] && res.rows[0].id)) {
+      callback(res.rows[0].id);
+    } else {
+      lib.pgQuery("INSERT INTO sessions (key, created_at, data) VALUES ('" + req.sessionId + "','" + new Date().toISOString() + "','" + hstore.stringify(result) + "') RETURNING id;", function (err, res) {
+        if (err) {
+          console.error("error occured", err)
+        }
+        if (res && res.rows[0].id) {
+          callback(res.rows[0].id);
+        }
+      });
+    }
   });
 };

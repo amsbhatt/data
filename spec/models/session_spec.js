@@ -35,4 +35,20 @@ describe('session data', function () {
     });
     index.pgQuery("DELETE from sessions;")
   });
+
+  it('does not duplicate the session', function (done) {
+    session.create(sessionData, function (err, res) {
+      index.pgQuery("select count(*) from sessions;", function (err, res) {
+        expect(res.rows[0].count).toEqual('1');
+        session.create(sessionData, function (err, res) {
+          index.pgQuery("select count(*) from sessions;", function (err, res) {
+            expect(res.rows[0].count).toEqual('1');
+            index.pgQuery("DELETE from sessions;");
+            done();
+          })
+        });
+        done();
+      });
+    });
+  });
 });

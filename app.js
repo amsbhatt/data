@@ -47,9 +47,9 @@ app.get('/', routes.index);
 app.post('/interactions', function(req, res) {
   session.create(req, function(response) {
     //listen to response for session_id before creating interactions
-    if (response) {
-      interaction.create(response, req, res);
-    }
+//    if (response) {
+//      interaction.create(response, req, res);
+//    }
   });
   res.end();
 });

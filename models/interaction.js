@@ -1,21 +1,7 @@
-DNAlibs = require('./index');
-var pg = DNAlibs.pg
-  , hstore = DNAlibs.hstore
-  , conString = DNAlibs.conString
-  , $ = DNAlibs.$
+var lib = require('../lib/index')
+  , $ = require('jquery')
+  , hstore = require('pg-hstore')
   , newUser = require('./user');
-
-var pgQuery = function (query, callback) {
-  pg.connect(conString, function (err, client) {
-    if (err) {
-      callback && callback(err);
-    }
-    client.query(query, function (err, result) {
-      callback && callback(err, result);
-      client.end();
-    });
-  })
-};
 
 //Specify valid action/category values
 var actionValidation = ['click', 'visit', 'submit'];
@@ -80,12 +66,12 @@ exports.create = function (sessionId, req) {
       $.extend(data, {session_id: sessionId, data: defaults });
 
       if (userData && userData.uid) {
-        newUser.user.create(userData, function (user_id) {
+        newUser.create(userData, function (user_id) {
           $.extend(data, {user_id: user_id});
-          pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");");
+          lib.pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");");
         });
       } else {
-        pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");");
+        lib.pgQuery("INSERT INTO interactions (" + formattedQuery(data).keys + ") VALUES (" + formattedQuery(data).values + ");");
       }
     } else {
       return console.log('User information does not exist or action and/or category are not valid types - category: ' + data.category + ', action: ' + data.action);
