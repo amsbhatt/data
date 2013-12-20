@@ -62,7 +62,6 @@ exports.create = function (sessionId, req, callback) {
         dataArray.push(user_id);
 
         lib.pgQuery('INSERT INTO interactions (' + dataKeys.join(', ') + ') VALUES (' + insertValues(dataArray.length) + ')', dataArray, function (err, res) {
-          console.info('int#4')
           if (err) {
             return callback && callback(err, res);
           }
