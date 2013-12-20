@@ -4,7 +4,7 @@ var lib = require('../lib/index')
   , newUser = require('./user');
 
 //Specify valid action/category values
-var actionValidation = ['click', 'visit', 'submit'];
+var actionValidation = ['click', 'visit', 'submit', 'view'];
 var categoryValidation = ['widget', 'button', 'page', 'link', 'input', 'image', 'text_field', 'opengraph', 'scroll', 'message', 'header'];
 
 var validParams = function (req) {
