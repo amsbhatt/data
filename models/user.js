@@ -118,30 +118,26 @@ var workCall = function (data, user_id) {
 }
 
 exports.create = function (data, callback) {
-  var failure = function (result) {
-    return console.error("a failure occurred", result);
-  };
   if (data.uid) {
     lib.pgQuery("SELECT id, source_id from users where client_id='" + data.uid + "';", function (err, res) {
       if (err) {
-        return failure
+        return callback && callback(err, res);
       }
       if (res && !!(res.rows[0] && res.rows[0].id)) {
         if(res.rows[0].source_id) {
           facebook_data(data, res.rows[0].id);
         }
-        callback(res.rows[0].id);
+        callback && callback(err, res.rows[0].id);
       } else {
         lib.pgQuery("INSERT into users (client_id, access_token, source_id) VALUES ('" + data.uid + "','" + data.uat + "','" + data.suid + "') RETURNING id;", function (err, res) {
           if (err) {
-            return failure
+            return callback && callback(err, res);
           }
-          var userId = res.rows[0].id;
-          if (res && userId) {
+          if (res && res.rows[0] && res.rows[0].id) {
             if (data.uat && data.suid) {
-              facebook_data(data, userId);
+              facebook_data(data, res.rows[0].id);
             }
-            callback(userId);
+            callback(err, res.rows[0].id);
           }
         })
       }

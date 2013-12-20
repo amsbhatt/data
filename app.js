@@ -45,11 +45,11 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.post('/interactions', function(req, res) {
-  session.create(req, function(response) {
+  session.create(req, function(err, response) {
     //listen to response for session_id before creating interactions
-//    if (response) {
-//      interaction.create(response, req, res);
-//    }
+    if (response) {
+      interaction.create(response, req, res);
+    }
   });
   res.end();
 });
