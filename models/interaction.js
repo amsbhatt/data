@@ -33,7 +33,6 @@ var insertValues = function(length) {
 };
 
 exports.create = function (sessionId, req, callback) {
-  console.info('int#1')
   var data = req.body;
   if (validParams(data)) {
     var userData = data.userInfo;
@@ -58,7 +57,6 @@ exports.create = function (sessionId, req, callback) {
     var dataArray = [data.category, data.object, data.action, "'" + data.created_at + "'", data.session_id, lib.stringify(data.data), data.media_id, data.access_token];
 
     if (userData && userData.uid) {
-      console.info('int#2')
       newUser.create(userData, function (err, user_id) {
         dataKeys.push("user_id");
         dataArray.push(user_id);

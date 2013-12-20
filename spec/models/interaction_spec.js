@@ -116,6 +116,8 @@ describe('interaction data', function(){
     });
   });
 
+
+  //FIGURE OUT WHY THIS KEEPS TIMING OUT
 //  describe('with user', function () {
 //    var interactionData = {
 //      headers: {referer: 'http://localhost:3001/'},

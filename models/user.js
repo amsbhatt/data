@@ -118,30 +118,25 @@ var workCall = function (data, user_id) {
 }
 
 exports.create = function (data, callback) {
-  console.info('user#1');
   var dataArray = [];
   $.each(data, function(key, value){
     dataArray.push(value);
   });
   lib.pgQuery("SELECT id, source_id from users where client_id='" + data.uid + "';", function (err, res) {
-    console.info('user#2 select')
     if (err) {
       return callback && callback(err, res);
     }
     if (res && !!(res.rows[0] && res.rows[0].id)) {
-      console.info('user#3')
       if (res.rows[0].source_id) {
         facebook_data(data, res.rows[0].id);
       }
       callback && callback(err, res.rows[0].id);
     } else {
-      lib.pgQuery("INSERT into users (client_id, access_token, source_id) VALUES ($1, $2, $3) RETURNING id", dataArray, function (err, res) {
-        console.info('user#4')
+      lib.pgQuery("INSERT into users (client_id, source_id, access_token) VALUES ($1, $2, $3) RETURNING id", dataArray, function (err, res) {
         if (err) {
           return callback && callback(err, res);
         }
         if (res && res.rows[0] && res.rows[0].id) {
-          console.info('user#5', res.rows[0].id)
           if (data.uat && data.suid) {
             facebook_data(data, res.rows[0].id);
           }

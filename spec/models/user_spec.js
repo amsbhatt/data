@@ -1,12 +1,10 @@
 var user = require('../../models/user')
-  , index = require('../models/index_spec.js');
-
-
+  , lib = require('../../lib/index');
 
 describe('user data', function(){
   describe('no existing user', function(){
-    beforeEach(function(){
-      index.pgQuery("delete from users;")
+    beforeEach(function(done){
+      lib.pgQuery("delete from users;", done);
     });
 
     it('valid params', function(done) {
@@ -17,11 +15,11 @@ describe('user data', function(){
       };
 
       user.create(userData, function(err, res){
-        index.pgQuery("SELECT * FROM users LIMIT 1;", function(err, res){
-          var response = res.rows[0];
+        if(err) { done(err)}
+        lib.pgQuery("SELECT * FROM users LIMIT 1;", function(err, res){
+          if(err) { done(err)}
           expect(res).toBeTruthy();
-          expect(err).toBeFalsy();
-
+          var response = res.rows[0];
           expect(response.client_id).toEqual('456');
           expect(response.source_id).toEqual('234567');
           expect(response.access_token).toEqual('CATSANDBOOTS1234455');
@@ -29,7 +27,6 @@ describe('user data', function(){
           expect(response.hometown_location).toEqual(null);
           expect(response.gender).toEqual(null);
           expect(response.birthdate).toEqual(null);
-
           done();
         });
       });
@@ -43,11 +40,11 @@ describe('user data', function(){
       };
 
       user.create(userData, function(err, res){
-        index.pgQuery("SELECT * FROM users LIMIT 1;", function(err, res){
-          var response = res.rows[0];
+        if(err) { done(err)}
+        lib.pgQuery("SELECT * FROM users LIMIT 1;", function(err, res){
+          if(err) { done(err)}
           expect(res).toBeTruthy();
-          expect(err).toBeFalsy();
-
+          var response = res.rows[0];
           expect(response.client_id).toEqual('878');
           expect(response.source_id).toEqual('');
           expect(response.access_token).toEqual('YOURFACE123');
@@ -55,7 +52,6 @@ describe('user data', function(){
           expect(response.hometown_location).toEqual(null);
           expect(response.gender).toEqual(null);
           expect(response.birthdate).toEqual(null);
-
           done();
         });
       });
@@ -71,7 +67,9 @@ describe('user data', function(){
 
     beforeEach(function(done){
       user.create(userData, function(err, res) {
-        index.pgQuery("SELECT count(*) FROM users;", function(err, res) {
+        if(err) { done(err)}
+        lib.pgQuery("SELECT count(*) FROM users;", function(err, res) {
+          if(err) { done(err)}
           expect(res.rows[0].count).toEqual('1');
         });
         done();
@@ -79,15 +77,12 @@ describe('user data', function(){
     });
 
     it('finds the user', function(done){
-      console.info("1", userData)
       user.create(userData, function(err, res){
-        console.info("2")
-        index.pgQuery("SELECT count(*) FROM users;", function(err, res) {
-          console.info("3")
+        if(err) { done(err)}
+        lib.pgQuery("SELECT count(*) FROM users;", function(err, res) {
+          if(err) { done(err)}
           expect(res.rows[0].count).toEqual('1');
-//          index.pgQuery("delete from users;");
           done();
-          console.info("4")
         });
       });
     })
