@@ -57,17 +57,17 @@ exports.create = function (req, callback) {
 
   lib.pgQuery("SELECT id from sessions where key='" + req.sessionId + "';", function (err, res) {
     if (err) {
-      console.error("error occured", err)
+      callback && callback(err, res);
     }
     if (res && !!(res.rows[0] && res.rows[0].id)) {
-      callback(res.rows[0].id);
+      callback && callback(err, res.rows[0].id);
     } else {
       lib.pgQuery("INSERT INTO sessions (key, created_at, data) VALUES ('" + req.sessionId + "','" + new Date().toISOString() + "','" + hstore.stringify(result) + "') RETURNING id;", function (err, res) {
         if (err) {
-          console.error("error occured", err)
+          callback && callback(err, res);
         }
         if (res && res.rows[0].id) {
-          callback(res.rows[0].id);
+          callback && callback(err, res.rows[0].id);
         }
       });
     }

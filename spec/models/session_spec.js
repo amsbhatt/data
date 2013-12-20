@@ -1,5 +1,5 @@
 var session = require('../../models/session')
-  , index = require('../models/index_spec.js');
+  , index = require('../../lib/index');
 
 var sessionData = {
   headers: {
@@ -12,11 +12,20 @@ var sessionData = {
 };
 
 describe('session data', function () {
+  beforeEach(function(done){
+    index.pgQuery("DELETE from sessions;", done);
+  });
+
+  afterEach(function(done){
+    index.pgQuery("DELETE from sessions;", done);
+  });
+
   it('stores the session', function (done) {
     session.create(sessionData, function (err, res) {
+      if (err) { done(err) }
       index.pgQuery("SELECT * FROM sessions LIMIT 1;", function (err, res) {
+        if (err) { done(err) }
         expect(res).toBeTruthy();
-        expect(err).toBeFalsy();
         var response = res.rows[0];
         expect(index.parse(response.data)).toEqual({
           city: 'San Antonio',
@@ -33,21 +42,26 @@ describe('session data', function () {
         done();
       });
     });
-    index.pgQuery("DELETE from sessions;")
   });
 
   it('does not duplicate the session', function (done) {
-    session.create(sessionData, function (err, res) {
-      index.pgQuery("select count(*) from sessions;", function (err, res) {
-        expect(res.rows[0].count).toEqual('1');
-        session.create(sessionData, function (err, res) {
-          index.pgQuery("select count(*) from sessions;", function (err, res) {
-            expect(res.rows[0].count).toEqual('1');
-            index.pgQuery("DELETE from sessions;");
-            done();
-          })
+    index.pgQuery("select count(*) from sessions;", function(err, res) {
+      if (err) { done(err) }
+      expect(res.rows[0].count).toEqual('0');
+      session.create(sessionData, function(err, res){
+        if (err) { done(err) }
+        index.pgQuery("select count(*) from sessions;", function(err, res){
+          if (err) { done(err) }
+          expect(res.rows[0].count).toEqual('1');
+          session.create(sessionData, function(err, res) {
+            if (err) { done(err) }
+            index.pgQuery("select count(*) from sessions;", function(err, res) {
+              if (err) { done(err) }
+              expect(res.rows[0].count).toEqual('1');
+              done();
+            });
+          });
         });
-        done();
       });
     });
   });
