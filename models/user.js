@@ -7,7 +7,6 @@ var lib = require('../lib/index')
 var facebook_data = function (data, user_id) {
   Like.create(data, user_id);
 
-  var self = this;
   //user demographics
   request('https://graph.facebook.com/fql?q=select+name,sex,birthday,hometown_location,current_location,friend_count,education,work+from+user+where+uid=' + data.suid + '&access_token=' + data.uat, function (err, res, body) {
     if (!err && res.statusCode == 200) {
