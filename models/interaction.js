@@ -24,18 +24,6 @@ var defaultData = function (urlPath) {
   };
 };
 
-//Formatted query Keys/Values
-//var formattedQuery = function (data) {
-//  console.info('format#1');
-//  var values = [];
-//  data.data = lib.stringify(data.data);
-//
-//  Object.keys(data).forEach(function (key) {
-//    values.push(data[key]);
-//  });
-//};
-//
-
 var insertValues = function(length) {
   var valuesArray = [];
   for (i = 0;i < length; i++) {
@@ -44,7 +32,8 @@ var insertValues = function(length) {
   return valuesArray.join(", ")
 };
 
-exports.create = function (sessionId, req, res, callback) {
+exports.create = function (sessionId, req, callback) {
+  console.info('int#1')
   var data = req.body;
   if (validParams(data)) {
     var userData = data.userInfo;
@@ -69,11 +58,13 @@ exports.create = function (sessionId, req, res, callback) {
     var dataArray = [data.category, data.object, data.action, "'" + data.created_at + "'", data.session_id, lib.stringify(data.data), data.media_id, data.access_token];
 
     if (userData && userData.uid) {
-      newUser.create(userData, function (user_id) {
-        dataKeys.push("user_id")
+      console.info('int#2')
+      newUser.create(userData, function (err, user_id) {
+        dataKeys.push("user_id");
         dataArray.push(user_id);
 
         lib.pgQuery('INSERT INTO interactions (' + dataKeys.join(', ') + ') VALUES (' + insertValues(dataArray.length) + ')', dataArray, function (err, res) {
+          console.info('int#4')
           if (err) {
             return callback && callback(err, res);
           }
@@ -82,7 +73,6 @@ exports.create = function (sessionId, req, res, callback) {
       });
     } else {
       lib.pgQuery("INSERT INTO interactions (" + dataKeys.join(",") + ") VALUES (" + insertValues(dataArray.length) + ")", dataArray, function (err, res) {
-        console.info('insert#2')
         if (err) {
           return callback && callback(err, res);
         }
@@ -90,7 +80,6 @@ exports.create = function (sessionId, req, res, callback) {
       });
     }
   } else {
-    console.info('in valid params')
     var error = 'User information does not exist or action and/or category are not valid types - category: ' + data.category + ', action: ' + data.action;
     callback && callback(error, null);
   }

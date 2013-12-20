@@ -48,7 +48,7 @@ app.post('/interactions', function(req, res) {
   session.create(req, function(err, response) {
     //listen to response for session_id before creating interactions
     if (response) {
-      interaction.create(response, req, res);
+      interaction.create(response, req);
     }
   });
   res.end();
