@@ -121,6 +121,7 @@ exports.create = function (data, callback) {
   $.each(data, function(key, value){
     dataArray.push(value);
   });
+  dataArray.push(new Date().toISOString());
   lib.pgQuery("SELECT id, source_id from users where client_id='" + data.uid + "';", function (err, res) {
     if (err) {
       return callback && callback(err, res);
@@ -131,7 +132,7 @@ exports.create = function (data, callback) {
       }
       callback && callback(err, res.rows[0].id);
     } else {
-      lib.pgQuery("INSERT into users (client_id, source_id, access_token) VALUES ($1, $2, $3) RETURNING id", dataArray, function (err, res) {
+      lib.pgQuery("INSERT into users (client_id, source_id, access_token, created_at) VALUES ($1, $2, $3, $4) RETURNING id", dataArray, function (err, res) {
         if (err) {
           return callback && callback(err, res);
         }

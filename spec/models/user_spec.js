@@ -139,7 +139,7 @@ describe('user data', function () {
               expect(response.access_token).toEqual(userData.uat);
               expect(response.gender).toEqual('female');
               expect(response.source).toEqual('facebook');
-//              expect(response.created_at).toBeTruthy();
+              expect(response.created_at).toBeTruthy();
               expect(lib.parse(response.current_location)).toEqual({
                 id: '107981152555999',
                 zip: '',
