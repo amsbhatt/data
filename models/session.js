@@ -55,14 +55,14 @@ exports.create = function (req, callback) {
     $.extend(result, geo);
   }
 
-  lib.pgQuery("SELECT id from sessions where key='" + req.sessionId + "';", function (err, res) {
+  lib.pgQuery("SELECT id from sessions where key='" + req.sessionID + "';", function (err, res) {
     if (err) {
       return callback && callback(err, res);
     }
     if (res && !!(res.rows[0] && res.rows[0].id)) {
       callback && callback(err, res.rows[0].id);
     } else {
-      lib.pgQuery("INSERT INTO sessions (key, created_at, data) VALUES ('" + req.sessionId + "','" + new Date().toISOString() + "','" + hstore.stringify(result) + "') RETURNING id;", function (err, res) {
+      lib.pgQuery("INSERT INTO sessions (key, created_at, data) VALUES ('" + req.sessionID + "','" + new Date().toISOString() + "','" + hstore.stringify(result) + "') RETURNING id;", function (err, res) {
         if (err) {
           return callback && callback(err, res);
         }

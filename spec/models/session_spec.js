@@ -8,7 +8,7 @@ var sessionData = {
   connection: {
     remoteAddress: '207.97.227.239'
   },
-  sessionId: 'DpuZpKMqi9ZU8r1MKF7DEcxt'
+  sessionID: 'DpuZpKMqi9ZU8r1MKF7DEcxt'
 };
 
 describe('session data', function () {
@@ -27,6 +27,7 @@ describe('session data', function () {
         if (err) { done(err) }
         expect(res).toBeTruthy();
         var response = res.rows[0];
+        expect(response.key).toEqual('DpuZpKMqi9ZU8r1MKF7DEcxt')
         expect(index.parse(response.data)).toEqual({
           city: 'San Antonio',
           region: 'TX',
