@@ -191,7 +191,8 @@ CREATE TABLE users (
     birthdate date,
     gender character(6),
     source text,
-    hometown_location hstore
+    hometown_location hstore,
+    created_at timestamp without time zone
 );
 
 
@@ -323,3 +324,4 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 
 --
 -- PostgreSQL database dump complete
+--
