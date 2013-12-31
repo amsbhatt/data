@@ -1,0 +1,127 @@
+<head>
+  <link rel='stylesheet' href='/style.css'/>
+  <body>
+  <div class='break'></div>
+  <h3>Daily Summary Report: Attribute Collection Status for {{date}}</h3>
+  <div class='break'></div>
+  <table>
+    <tr>
+      <td colspan="2"><h3>All Time Attribute Totals</h3></td>
+    </tr>
+    <tr>
+      <th>TOTAL</th>
+      <th>PER ACCOUNT</th>
+    </tr>
+    <tr>
+      <td>
+        {{ likes.total_likes }} attributes
+      </td>
+      <td>
+        {{ per_user }} attr/user
+      </td>
+    </tr>
+  </table>
+
+  <div class='break'></div>
+
+  <table>
+    <tr>
+      <td>Day totals: {{date}}</td>
+      <td>Week to Date: {{week}}</td>
+    </tr>
+    <tr>
+      <td colspan="2">Total attributes gathered</td>
+    </tr>
+    <tr>
+      <td>
+        {{ likes.total_day_likes }} attributes
+      </td>
+      <td>
+        {{ likes.total_week_likes }} attributes
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">Attributes per new user account</td>
+    </tr>
+    <tr>
+      <td>
+        WIP attributes
+      </td>
+      <td>
+        WIP attributes
+      </td>
+    </tr>
+  </table>
+
+  <div class='break'></div>
+  <table>
+    <tr>
+      <td colspan="3"><h3>All Time Session Totals:</h3></td>
+    </tr>
+    <tr>
+      <th>Sessions</th>
+      <th>Users</th>
+      <th>Sessions/User</th>
+    </tr>
+    <tr>
+      <td>
+        {{sessions}} sessions
+      </td>
+      <td>
+        {{users}} users
+      </td>
+      <td>
+        {{sessions_user}} session/user
+      </td>
+    </tr>
+  </table>
+
+  <br>
+
+  <table>
+    <tr>
+      <td colspan="2"><h3>Attribute details by area</h3></td>
+    </tr>
+    <tr>
+      <th>
+        Likes
+      </th>
+      <th>
+        Day
+      </th>
+    </tr>
+    {{#likes.daily}}
+    <tr>
+      <td>
+        {{ category }}
+      </td>
+      <td>
+        {{ count }}
+      </td>
+    </tr>
+    {{/likes.daily}}
+  </table>
+
+
+  <table>
+    <tr>
+      <th>
+        Likes
+      </th>
+      <th>
+        Week
+      </th>
+    </tr>
+    {{#likes.weekly}}
+    <tr>
+      <td>
+        {{ category }}
+      </td>
+      <td>
+        {{ count }}
+      </td>
+    </tr>
+    {{/likes.weekly}}
+  </table>
+  </body>
+</head>

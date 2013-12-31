@@ -4,7 +4,7 @@
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
+var data = require('./routes/data');
 var session = require('./models/session');
 var interaction = require('./models/interaction');
 var http = require('http');
@@ -14,8 +14,9 @@ app = express();
 
 // all environments
 app.set('port', process.env.PORT || 3001);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+app.engine('html', require('hogan-express'));
 app.use(function(req, res, next) {
   if (req) {
     res.header('Access-Control-Allow-Origin', req.headers.origin);
@@ -36,7 +37,7 @@ app.use(express.bodyParser());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
 
 // development only
 if ('development' == app.get('env')) {
@@ -44,6 +45,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/data', data.create);
 app.post('/interactions', function(req, res) {
   session.create(req, function(err, response) {
     //listen to response for session_id before creating interactions
